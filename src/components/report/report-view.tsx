@@ -99,7 +99,7 @@ export function ReportView({
     if (Array.isArray(node)) {
       return node.map((child) => renderWithCitations(child));
     }
-    if (React.isValidElement(node)) {
+    if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
       if (node.type === "code" || node.type === "pre") {
         return node;
       }

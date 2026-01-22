@@ -33,6 +33,7 @@ export function useSession(sessionId: string) {
         setQuestions(
           questionList.map((q: Question) => ({
             ...q,
+            selectedOption: q.selectedOption ?? null,
             freeText: q.freeText ?? null,
           }))
         );
