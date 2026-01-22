@@ -35,6 +35,8 @@ export async function callOpenRouter(
     payload.max_tokens = options.maxTokens;
   }
 
+  console.log("[openrouter] request", JSON.stringify(payload));
+
   const response = await fetch(OPENROUTER_API_URL, {
     method: "POST",
     headers: {
@@ -52,5 +54,7 @@ export async function callOpenRouter(
   }
 
   const data: OpenRouterResponse = await response.json();
-  return data.choices[0]?.message?.content || "";
+  const content = data.choices[0]?.message?.content || "";
+  console.log("[openrouter] response", JSON.stringify({ content }));
+  return content;
 }

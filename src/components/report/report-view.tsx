@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { QuestionCitation } from "./question-citation";
 
@@ -62,6 +62,57 @@ export function ReportView({
     return question.options[question.selectedOption] ?? null;
   };
 
+  const normalizedReportText = reportText
+    .replace(/\*\*([「『])/g, "**\u200b$1")
+    .replace(/([」』])\*\*/g, "$1\u200b**");
+
+  const renderTextWithCitations = (text: string): React.ReactNode => {
+    const citationSplitRegex = /((?:\[|［)(?:Q)?\d+(?:\]|］))/g;
+    const citationMatchRegex = /(?:\[|［)(?:Q)?(\d+)(?:\]|］)/;
+
+    if (!citationMatchRegex.test(text)) return text;
+
+    const parts = text.split(citationSplitRegex);
+    return parts.map((part, i) => {
+      const match = part.match(citationMatchRegex);
+      if (!match) return part;
+
+      const qNum = Number(match[1]);
+      const question = questions.find((q) => q.question_index === qNum);
+      if (!question) return part;
+
+      return (
+        <QuestionCitation
+          key={`citation-${qNum}-${i}`}
+          questionIndex={qNum}
+          statement={question.statement}
+          selectedAnswer={getAnswerLabel(question)}
+        />
+      );
+    });
+  };
+
+  const renderWithCitations = (node: React.ReactNode): React.ReactNode => {
+    if (typeof node === "string") {
+      return renderTextWithCitations(node);
+    }
+    if (Array.isArray(node)) {
+      return node.map((child) => renderWithCitations(child));
+    }
+    if (React.isValidElement(node)) {
+      if (node.type === "code" || node.type === "pre") {
+        return node;
+      }
+      if (!node.props?.children) return node;
+      return React.cloneElement(
+        node,
+        node.props,
+        renderWithCitations(node.props.children)
+      );
+    }
+    return node;
+  };
+
   return (
     <div className="max-w-3xl mx-auto">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
@@ -94,44 +145,36 @@ export function ReportView({
       <div className="prose prose-blue max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700">
         <ReactMarkdown
           components={{
-            p: ({ children }) => {
-              // Process children to replace citation patterns
-              const processChildren = (child: React.ReactNode): React.ReactNode => {
-                if (typeof child === "string") {
-                  const parts = child.split(/(\[\d+\])/g);
-                  return parts.map((part, i) => {
-                    const match = part.match(/\[(\d+)\]/);
-                    if (match) {
-                      const qNum = parseInt(match[1]);
-                      const question = questions.find(
-                        (q) => q.question_index === qNum
-                      );
-                      if (question) {
-                        return (
-                          <QuestionCitation
-                            key={i}
-                            questionIndex={qNum}
-                            statement={question.statement}
-                            selectedAnswer={getAnswerLabel(question)}
-                          />
-                        );
-                      }
-                    }
-                    return part;
-                  });
-                }
-                return child;
-              };
-
-              const processed = Array.isArray(children)
-                ? children.map(processChildren)
-                : processChildren(children);
-
-              return <p>{processed}</p>;
-            },
+            p: ({ node, children, ...props }) => (
+              <p {...props}>{renderWithCitations(children)}</p>
+            ),
+            li: ({ node, children, ...props }) => (
+              <li {...props}>{renderWithCitations(children)}</li>
+            ),
+            blockquote: ({ node, children, ...props }) => (
+              <blockquote {...props}>{renderWithCitations(children)}</blockquote>
+            ),
+            h1: ({ node, children, ...props }) => (
+              <h1 {...props}>{renderWithCitations(children)}</h1>
+            ),
+            h2: ({ node, children, ...props }) => (
+              <h2 {...props}>{renderWithCitations(children)}</h2>
+            ),
+            h3: ({ node, children, ...props }) => (
+              <h3 {...props}>{renderWithCitations(children)}</h3>
+            ),
+            h4: ({ node, children, ...props }) => (
+              <h4 {...props}>{renderWithCitations(children)}</h4>
+            ),
+            h5: ({ node, children, ...props }) => (
+              <h5 {...props}>{renderWithCitations(children)}</h5>
+            ),
+            h6: ({ node, children, ...props }) => (
+              <h6 {...props}>{renderWithCitations(children)}</h6>
+            ),
           }}
         >
-          {reportText}
+          {normalizedReportText}
         </ReactMarkdown>
       </div>
     </div>

@@ -27,9 +27,11 @@ export function useSession(sessionId: string) {
         if (!response.ok) throw new Error("Failed to fetch session");
 
         const data = await response.json();
+        const questionList = (data.questions || []) as Question[];
+
         setSession(data.session);
         setQuestions(
-          (data.questions || []).map((q: Question) => ({
+          questionList.map((q: Question) => ({
             ...q,
             freeText: q.freeText ?? null,
           }))
@@ -38,8 +40,18 @@ export function useSession(sessionId: string) {
         setReport(data.report);
 
         // If no questions yet, generate first batch
-        if (data.questions.length === 0) {
+        if (questionList.length === 0) {
           await generateNextBatchInternal(1, 5);
+        }
+
+        const allAnswered =
+          questionList.length > 0 &&
+          questionList.every((q) => q.selectedOption !== null);
+        if (allAnswered) {
+          const lastIndex = Math.max(
+            ...questionList.map((q) => q.question_index)
+          );
+          await generateNextBatchInternal(lastIndex + 1, lastIndex + 5);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");

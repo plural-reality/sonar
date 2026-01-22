@@ -14,6 +14,9 @@ interface QuestionFlowProps {
   sessionId: string;
 }
 
+const BATCH_SIZE = 5;
+const REPORT_TARGET = 50;
+
 export function QuestionFlow({ sessionId }: QuestionFlowProps) {
   const router = useRouter();
   const {
@@ -52,7 +55,7 @@ export function QuestionFlow({ sessionId }: QuestionFlowProps) {
   const answeredCount = questions.filter(
     (q) => q.selectedOption !== null
   ).length;
-  const totalTarget = 50;
+  const progressTotal = Math.max(REPORT_TARGET, questions.length);
 
   // Find unanswered questions
   const unansweredQuestions = questions.filter(
@@ -88,7 +91,7 @@ export function QuestionFlow({ sessionId }: QuestionFlowProps) {
 
   // Auto-generate next batch and analysis when batch is complete
   useEffect(() => {
-    const batchComplete = answeredCount > 0 && answeredCount % 5 === 0;
+    const batchComplete = answeredCount > 0 && answeredCount % BATCH_SIZE === 0;
 
     if (
       batchComplete &&
@@ -96,21 +99,29 @@ export function QuestionFlow({ sessionId }: QuestionFlowProps) {
       !isGeneratingQuestions &&
       !processingBatch
     ) {
-      const batchIndex = answeredCount / 5;
+      const batchIndex = answeredCount / BATCH_SIZE;
       const analysisExists = analyses.some((a) => a.batch_index === batchIndex);
+      const startIndex = (batchIndex - 1) * BATCH_SIZE + 1;
+      const endIndex = batchIndex * BATCH_SIZE;
+      const nextStartIndex = endIndex + 1;
+      const nextEndIndex = endIndex + BATCH_SIZE;
+      const nextBatchCount = questions.filter(
+        (q) =>
+          q.question_index >= nextStartIndex &&
+          q.question_index <= nextEndIndex
+      ).length;
+      const needsNextBatch = nextBatchCount < BATCH_SIZE;
 
-      if (!analysisExists) {
+      if (!analysisExists || needsNextBatch) {
         setProcessingBatch(true);
-        const startIndex = (batchIndex - 1) * 5 + 1;
-        const endIndex = batchIndex * 5;
-
-        // Generate analysis and next questions
-        Promise.all([
-          generateAnalysis(batchIndex, startIndex, endIndex),
-          answeredCount < totalTarget
-            ? generateNextBatch(endIndex + 1, endIndex + 5)
-            : Promise.resolve(),
-        ]).finally(() => setProcessingBatch(false));
+        const tasks: Promise<unknown>[] = [];
+        if (!analysisExists) {
+          tasks.push(generateAnalysis(batchIndex, startIndex, endIndex));
+        }
+        if (needsNextBatch) {
+          tasks.push(generateNextBatch(nextStartIndex, nextEndIndex));
+        }
+        Promise.all(tasks).finally(() => setProcessingBatch(false));
       }
     }
   }, [
@@ -121,6 +132,7 @@ export function QuestionFlow({ sessionId }: QuestionFlowProps) {
     processingBatch,
     generateAnalysis,
     generateNextBatch,
+    questions,
   ]);
 
   // Auto-scroll to the latest analysis block only when a new one is added
@@ -180,11 +192,12 @@ export function QuestionFlow({ sessionId }: QuestionFlowProps) {
   for (const question of questions) {
     questionBatch.push(question);
 
-    if (questionBatch.length === 5) {
+    if (questionBatch.length === BATCH_SIZE) {
       contentBlocks.push({ type: "questions" as const, items: [...questionBatch] });
 
       // Find analysis for this batch
-      const batchIndex = Math.floor((question.question_index - 1) / 5) + 1;
+      const batchIndex =
+        Math.floor((question.question_index - 1) / BATCH_SIZE) + 1;
       const analysis = analyses.find((a) => a.batch_index === batchIndex);
 
       if (analysis) {
@@ -216,8 +229,8 @@ export function QuestionFlow({ sessionId }: QuestionFlowProps) {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Progress current={0} total={totalTarget} />
-        {[...Array(5)].map((_, i) => (
+        <Progress current={0} total={progressTotal} />
+        {[...Array(BATCH_SIZE)].map((_, i) => (
           <QuestionSkeleton key={i} />
         ))}
       </div>
@@ -228,8 +241,8 @@ export function QuestionFlow({ sessionId }: QuestionFlowProps) {
     <div className="space-y-6">
       {/* Fixed progress header */}
       <div className="sticky top-0 bg-gray-50 py-4 z-10 border-b border-gray-200 -mx-4 px-4">
-        <Progress current={answeredCount} total={totalTarget} />
-        {answeredCount >= totalTarget && !isFinishing && (
+        <Progress current={answeredCount} total={progressTotal} />
+        {answeredCount >= REPORT_TARGET && !isFinishing && (
           <div className="mt-3 text-center">
             <button
               onClick={handleFinish}
@@ -251,9 +264,9 @@ export function QuestionFlow({ sessionId }: QuestionFlowProps) {
             </div>
           </div>
         )}
-        {answeredCount >= 5 &&
-          answeredCount < totalTarget &&
-          answeredCount % 5 === 0 && (
+        {answeredCount >= BATCH_SIZE &&
+          answeredCount < REPORT_TARGET &&
+          answeredCount % BATCH_SIZE === 0 && (
           <div className="mt-3 text-center">
             <button
               onClick={generateReport}
@@ -329,7 +342,7 @@ export function QuestionFlow({ sessionId }: QuestionFlowProps) {
         {isGeneratingAnalysis && <AnalysisSkeleton />}
         {isGeneratingQuestions && (
           <div className="space-y-4">
-            {[...Array(5)].map((_, i) => (
+            {[...Array(BATCH_SIZE)].map((_, i) => (
               <QuestionSkeleton key={i} />
             ))}
           </div>
