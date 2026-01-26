@@ -1,7 +1,7 @@
 export interface PhaseRange {
   start: number;
   end: number;
-  phase: "exploration" | "deep-dive";
+  phase: "exploration" | "deep-dive" | "reframing";
 }
 
 export interface PhaseProfile {
@@ -12,13 +12,13 @@ export const DEFAULT_PHASE_PROFILE: PhaseProfile = {
   ranges: [
     { start: 1, end: 5, phase: "exploration" },
     { start: 6, end: 10, phase: "exploration" },
-    { start: 11, end: 15, phase: "exploration" },
+    { start: 11, end: 15, phase: "reframing" },
     { start: 16, end: 20, phase: "deep-dive" },
     { start: 21, end: 25, phase: "exploration" },
-    { start: 26, end: 30, phase: "deep-dive" },
-    { start: 31, end: 35, phase: "exploration" },
-    { start: 36, end: 40, phase: "deep-dive" },
-    { start: 41, end: 45, phase: "exploration" },
+    { start: 26, end: 30, phase: "reframing" },
+    { start: 31, end: 35, phase: "deep-dive" },
+    { start: 36, end: 40, phase: "exploration" },
+    { start: 41, end: 45, phase: "reframing" },
     { start: 46, end: 50, phase: "deep-dive" },
   ],
 };
@@ -26,7 +26,7 @@ export const DEFAULT_PHASE_PROFILE: PhaseProfile = {
 export function getPhaseForQuestionIndex(
   questionIndex: number,
   phaseProfile: PhaseProfile = DEFAULT_PHASE_PROFILE
-): "exploration" | "deep-dive" {
+): "exploration" | "deep-dive" | "reframing" {
   // For questions beyond 50, cycle through phases
   const normalizedIndex =
     questionIndex > 50 ? ((questionIndex - 1) % 50) + 1 : questionIndex;
@@ -40,29 +40,55 @@ export function getPhaseForQuestionIndex(
   return "exploration"; // Default fallback
 }
 
-export function getPhaseDescription(phase: "exploration" | "deep-dive"): string {
+export function getPhaseDescription(
+  phase: "exploration" | "deep-dive" | "reframing"
+): string {
   if (phase === "exploration") {
-    return `【探索フェーズ】
+    return `【現在のフェーズ：探索フェーズ】
 このフェーズの目的は、ユーザーの目的・背景情報に対して「まだ聞けていないテーマ」を網羅的にカバーすることです。
 
 1. ユーザーの目的達成に必要な、まだ一度も触れていないテーマがあれば優先的に扱う
-2. 主要テーマが一通りカバーできている場合は、同じテーマを「別の角度」から問う
-   - 例: 時間軸を変える（過去→現在→未来）、立場を変える（自分→他者→社会）、条件を変える（理想→現実→制約下）
-3. テーマ間の優先度を問うようなメタ質問によって、優先順位や思いの強さを確認する
+2. テーマ間の優先度を問うようなメタ質問によって、優先順位や思いの強さを確認する
+3. 各テーマに対するユーザーの関心度の強さを把握する
 
 ■ 大局観の維持
 - 直近の回答に引きずられすぎず、全体目的に対するバランスを常に意識する
-- 「この目的を達成するために、あと何を聞くべきか」を俯瞰して考える`;
+- 「この目的を達成するために、あと何を聞くべきか」を俯瞰して考える
+- テーマの幅を広げることに集中する`;
   }
 
-  return `【深掘りフェーズ】
+  if (phase === "reframing") {
+    return `【現在のフェーズ：視点変換フェーズ】
+このフェーズの目的は、既に触れたテーマについて「別の角度・切り口」から問い直し、多角的な認知を得ることです。
+
+■ 視点変換のアプローチ
+1. 主語・スコープを変える
+   - 全体 ↔ 個人、組織 ↔ 個人、自分 ↔ 他者 ↔ 社会
+2. 時間軸を変える
+   - 過去 → 現在 → 未来、短期 ↔ 長期
+3. 条件・状況を変える
+   - 理想 ↔ 現実 ↔ 制約下、平常時 ↔ 緊急時
+4. 立場・役割を変える
+   - 当事者 ↔ 傍観者、提供者 ↔ 受益者
+
+■ 概念の分離による深い理解
+- 事実認識 vs 理想像：「今どうなっているか」と「どうあるべきか」を分けて問う
+- 原則 vs 程度：「そもそもの考え方」と「どの程度か」を分けて問う
+- 目的 vs 手段：「何のためか」と「どうやるか」を分けて問う
+- 問題 vs 課題 vs 解決策：現状の問題、取り組むべき課題、具体的な手段を区別する
+
+■ このフェーズの価値
+- 同じテーマでも角度を変えることで、ユーザー自身も気づいていなかった側面が見える
+- 多角的な情報により、より立体的・包括的な理解が得られる`;
+  }
+
+  return `【現在のフェーズ：深掘りフェーズ】
 このフェーズの目的は、探索フェーズで見えてきたテーマについて「より深い理解」を得ることです。
 
 ■ 深掘りの方向性
 1. 「このテーマについて、こういう場合はどうか？」という条件分岐を探る
 2. 表面的な回答の背後にある「なぜそう思うのか」の根拠や価値観を引き出す
 3. 一見矛盾する回答があれば、その境界線や条件を明らかにする
-
 
 ■ 新規情報の獲得
 - 既に聞いたことと同じことを聞いても意味がない
