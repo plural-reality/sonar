@@ -30,7 +30,7 @@ export default async function SessionPage({ params }: SessionPageProps) {
   if (isVotematch) {
     return (
       <main className="min-h-screen bg-white">
-        <div className="max-w-2xl mx-auto px-4 py-6">
+        <div className="max-w-2xl mx-auto px-4 pb-6">
           <VotematchSession sessionId={id} />
         </div>
       </main>

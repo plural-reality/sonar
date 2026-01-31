@@ -87,7 +87,7 @@ export function VotematchSession({ sessionId }: VotematchSessionProps) {
   }
 
   return (
-    <div className="max-w-md mx-auto">
+    <div className="max-w-md mx-auto pt-6">
       {/* タイトル */}
       <header className="mb-8">
         <p className="text-sm text-gray-400 mb-3">2026年 衆議院選挙</p>
