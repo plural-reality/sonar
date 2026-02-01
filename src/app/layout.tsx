@@ -8,6 +8,9 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL || "https://sonar-b-eight.vercel.app"
+  ),
   title: "Sonar - AIとの対話で思考を言語化",
   description:
     "AIとの対話を通じて、あなたの考えを言語化し、スタンスを明確にする内省支援ツール",

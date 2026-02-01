@@ -204,7 +204,42 @@ export function Shugiin2026Welcome() {
           </button>
 
           <p className="text-xs text-gray-400 text-center mt-4">
-            回答データは保存されません
+            回答データは個人を特定しない形式で保存されます
+          </p>
+        </section>
+
+        {/* ベータ版 disclaimer */}
+        <section className="mt-8 p-4 bg-gray-50 rounded-lg">
+          <p className="text-xs text-gray-500 leading-relaxed">
+            本サービスは技術検証が目的のベータ版です。中立性に配慮して作成しておりますが、分析結果の正確性を保証するものではありません。
+            ご意見・ご指摘は
+            <a
+              href="mailto:sa4168@columbia.edu"
+              className="text-blue-600 hover:underline"
+            >
+              こちら
+            </a>
+            までお寄せください。
+          </p>
+          <p className="text-xs text-gray-500 mt-2">
+            <a
+              href="https://github.com/blu3mo/sonar-b"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              ソースコード
+            </a>
+            ・
+            <a
+              href="https://github.com/blu3mo/sonar-b/blob/main/src/lib/presets/2026-shugiin-election.json"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              プロンプト
+            </a>
+            を公開しています。
           </p>
         </section>
       </div>
