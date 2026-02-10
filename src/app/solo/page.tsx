@@ -3,7 +3,7 @@ import { SessionForm } from "@/components/session/session-form";
 import { SessionList } from "@/components/session/session-list";
 
 export const metadata: Metadata = {
-  title: "1人で壁打ちする - Sonar",
+  title: "1人で壁打ちする - 倍速アンケート",
   description: "AIとの対話を通じて、あなたの考えを言語化し、思考を整理します",
 };
 
