@@ -22,6 +22,7 @@ function formatAnswerText(
 export interface QuestionGenerationContext {
   purpose: string;
   backgroundText: string;
+  keyQuestions?: string[];
   previousQA: Array<{
     index: number;
     statement: string;
@@ -52,6 +53,17 @@ export function buildQuestionGenerationPrompt(
     })
     .join("\n\n");
 
+  const keyQuestionsSection =
+    ctx.keyQuestions && ctx.keyQuestions.length > 0
+      ? `## キークエスチョン（調査の軸となる問い）
+以下のキークエスチョンを軸として、多角的に深掘りするステートメントを生成してください。
+各キークエスチョンに対して偏りなくカバーするよう意識してください。
+
+${ctx.keyQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
+
+`
+      : "";
+
   return `あなたは内省支援の専門家であり、ステートメント設計のプロフェッショナルです。
 ユーザーが自分自身のスタンスや価値観を明確にするためのステートメントを生成してください。
 
@@ -61,7 +73,7 @@ ${ctx.purpose}
 ## 背景情報
 ${ctx.backgroundText || "特になし"}
 
-## これまでのステートメントと回答
+${keyQuestionsSection}## これまでのステートメントと回答
 ${qaHistory || "まだ項目はありません（最初の5問を生成）"}
 
 ## 現在のフェーズと指針

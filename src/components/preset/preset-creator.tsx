@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 interface CreatedPreset {
   slug: string;
@@ -12,9 +12,61 @@ export function PresetCreator() {
   const [purpose, setPurpose] = useState("");
   const [backgroundText, setBackgroundText] = useState("");
   const [reportInstructions, setReportInstructions] = useState("");
+  const [keyQuestions, setKeyQuestions] = useState<string[]>([]);
+  const [isGeneratingKeyQuestions, setIsGeneratingKeyQuestions] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [created, setCreated] = useState<CreatedPreset | null>(null);
+
+  const generateKeyQuestions = useCallback(async () => {
+    if (!purpose.trim()) return;
+
+    setIsGeneratingKeyQuestions(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/presets/generate-key-questions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purpose,
+          backgroundText: backgroundText || undefined,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(
+          data.error || "キークエスチョンの生成に失敗しました"
+        );
+      }
+
+      const { keyQuestions: generated } = await response.json();
+      setKeyQuestions(generated);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "予期せぬエラーが発生しました"
+      );
+    } finally {
+      setIsGeneratingKeyQuestions(false);
+    }
+  }, [purpose, backgroundText]);
+
+  const updateKeyQuestion = (index: number, value: string) => {
+    setKeyQuestions((prev) => {
+      const updated = [...prev];
+      updated[index] = value;
+      return updated;
+    });
+  };
+
+  const removeKeyQuestion = (index: number) => {
+    setKeyQuestions((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const addKeyQuestion = () => {
+    setKeyQuestions((prev) => [...prev, ""]);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +74,8 @@ export function PresetCreator() {
     setIsSubmitting(true);
 
     try {
+      const filteredKeyQuestions = keyQuestions.filter((q) => q.trim());
+
       const response = await fetch("/api/presets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -30,6 +84,8 @@ export function PresetCreator() {
           purpose,
           backgroundText: backgroundText || undefined,
           reportInstructions: reportInstructions || undefined,
+          keyQuestions:
+            filteredKeyQuestions.length > 0 ? filteredKeyQuestions : undefined,
         }),
       });
 
@@ -155,6 +211,62 @@ export function PresetCreator() {
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
           rows={6}
         />
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <label className="block text-sm font-medium text-gray-700">
+            キークエスチョン（任意）
+          </label>
+          <button
+            type="button"
+            onClick={generateKeyQuestions}
+            disabled={isGeneratingKeyQuestions || !purpose.trim()}
+            className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {isGeneratingKeyQuestions ? "生成中..." : "AIで生成する"}
+          </button>
+        </div>
+        <p className="text-xs text-gray-500 mb-3">
+          目的に基づいた大きな粒度の問いです。これらを軸に具体的な質問が生成されます。「AIで生成する」ボタンで自動生成し、手動で編集もできます。
+        </p>
+
+        {keyQuestions.length > 0 && (
+          <div className="space-y-2 mb-3">
+            {keyQuestions.map((question, index) => (
+              <div key={index} className="flex gap-2 items-start">
+                <span className="text-xs text-gray-400 mt-3 min-w-[1.5rem] text-right">
+                  {index + 1}.
+                </span>
+                <textarea
+                  value={question}
+                  onChange={(e) => updateKeyQuestion(index, e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm"
+                  rows={2}
+                  placeholder="キークエスチョンを入力..."
+                />
+                <button
+                  type="button"
+                  onClick={() => removeKeyQuestion(index)}
+                  className="mt-2 text-gray-400 hover:text-red-500 transition-colors"
+                  title="削除"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={addKeyQuestion}
+          className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+        >
+          + 質問を追加
+        </button>
       </div>
 
       <div>

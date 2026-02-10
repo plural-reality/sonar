@@ -23,6 +23,7 @@ interface SessionData {
   id: string;
   purpose: string;
   background_text: string | null;
+  key_questions: string[] | null;
   phase_profile: {
     ranges: Array<{
       start: number;
@@ -98,9 +99,11 @@ export async function POST(request: NextRequest) {
     const phase = getPhaseForQuestionIndex(startIndex, session.phase_profile);
 
     // Generate questions via OpenRouter
+    const keyQuestions = Array.isArray(session.key_questions) ? session.key_questions : [];
     const prompt = buildQuestionGenerationPrompt({
       purpose: session.purpose,
       backgroundText: session.background_text || "",
+      keyQuestions: keyQuestions.length > 0 ? keyQuestions : undefined,
       previousQA,
       startIndex,
       endIndex,
