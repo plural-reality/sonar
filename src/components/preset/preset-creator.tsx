@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { PdfUpload } from "@/components/session/pdf-upload";
 
 interface CreatedPreset {
   slug: string;
@@ -15,6 +16,10 @@ export function PresetCreator() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [created, setCreated] = useState<CreatedPreset | null>(null);
+
+  const handlePdfExtract = (text: string) => {
+    setBackgroundText((prev) => prev + "\n\n--- PDF Content ---\n" + text);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,6 +161,8 @@ export function PresetCreator() {
           rows={6}
         />
       </div>
+
+      <PdfUpload onExtract={handlePdfExtract} />
 
       <div>
         <label
