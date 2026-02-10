@@ -1,6 +1,11 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { getPreset, getPresetMetadata } from "@/lib/presets";
+import {
+  getPreset,
+  getPresetMetadata,
+  getPresetFromDB,
+  getPresetMetadataFromDB,
+} from "@/lib/presets";
 import { PresetSessionStarter } from "@/components/session/preset-session-starter";
 
 interface PresetPageProps {
@@ -11,8 +16,10 @@ export async function generateMetadata({
   params,
 }: PresetPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const preset = getPreset(slug);
-  const meta = getPresetMetadata(slug);
+
+  // Try hardcoded first, then DB
+  const preset = getPreset(slug) || (await getPresetFromDB(slug));
+  const meta = getPresetMetadata(slug) || (await getPresetMetadataFromDB(slug));
 
   if (!preset) {
     return {};
@@ -42,7 +49,9 @@ export async function generateMetadata({
 
 export default async function PresetPage({ params }: PresetPageProps) {
   const { slug } = await params;
-  const preset = getPreset(slug);
+
+  // Try hardcoded first, then DB
+  const preset = getPreset(slug) || (await getPresetFromDB(slug));
 
   if (!preset) {
     notFound();

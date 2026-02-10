@@ -4,10 +4,11 @@ import { z } from "zod";
 import { DEFAULT_PHASE_PROFILE } from "@/lib/utils/phase";
 
 const createSessionSchema = z.object({
-  purpose: z.string().min(1, "目的を入力してください").max(500),
+  purpose: z.string().min(1, "目的を入力してください").max(5000),
   backgroundText: z.string().max(50000).optional(),
   title: z.string().max(100).optional(),
   reportInstructions: z.string().max(10000).optional(),
+  presetId: z.string().uuid().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -27,6 +28,7 @@ export async function POST(request: NextRequest) {
         phase_profile: DEFAULT_PHASE_PROFILE,
         status: "active",
         current_question_index: 0,
+        preset_id: validated.presetId || null,
       })
       .select("id")
       .single();

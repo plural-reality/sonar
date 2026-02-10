@@ -1,6 +1,8 @@
 import shugiin2026 from "./2026-shugiin-election.json";
+import { createClient } from "@/lib/supabase/server";
 
 export interface SessionPreset {
+  id?: string;
   title: string;
   purpose: string;
   backgroundText?: string;
@@ -32,4 +34,47 @@ export function getPreset(slug: string): SessionPreset | null {
 
 export function getPresetMetadata(slug: string): PresetMetadata | null {
   return PRESET_METADATA[slug] ?? null;
+}
+
+export async function getPresetFromDB(slug: string): Promise<SessionPreset | null> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("presets")
+      .select("id, title, purpose, background_text, report_instructions")
+      .eq("slug", slug)
+      .single();
+
+    if (error || !data) return null;
+
+    return {
+      id: data.id,
+      title: data.title,
+      purpose: data.purpose,
+      backgroundText: data.background_text ?? undefined,
+      reportInstructions: data.report_instructions ?? undefined,
+    };
+  } catch {
+    return null;
+  }
+}
+
+export async function getPresetMetadataFromDB(slug: string): Promise<PresetMetadata | null> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("presets")
+      .select("title, purpose, og_title, og_description")
+      .eq("slug", slug)
+      .single();
+
+    if (error || !data) return null;
+
+    return {
+      ogTitle: data.og_title || data.title,
+      ogDescription: data.og_description || data.purpose,
+    };
+  } catch {
+    return null;
+  }
 }

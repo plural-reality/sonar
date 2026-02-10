@@ -11,9 +11,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_BASE_URL || "https://sonar-b-eight.vercel.app"
   ),
-  title: "Sonar - AIとの対話で思考を言語化",
+  title: "倍速アンケート - AIとの対話で深い意見を素早く集める",
   description:
-    "AIとの対話を通じて、あなたの考えを言語化し、スタンスを明確にする内省支援ツール",
+    "AIとの対話を通じて、回答者の本音や考えを掘り下げるアンケートツール",
 };
 
 export default function RootLayout({

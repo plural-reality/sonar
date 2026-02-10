@@ -27,6 +27,7 @@ export function PresetSessionStarter({ preset }: PresetSessionStarterProps) {
             backgroundText: preset.backgroundText,
             title: preset.title,
             reportInstructions: preset.reportInstructions,
+            presetId: preset.id,
           }),
         });
 

@@ -1,3 +1,16 @@
+export interface Preset {
+  id: string;
+  slug: string;
+  title: string;
+  purpose: string;
+  background_text: string | null;
+  report_instructions: string | null;
+  og_title: string | null;
+  og_description: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Session {
   id: string;
   title: string | null;
@@ -7,6 +20,7 @@ export interface Session {
   phase_profile: PhaseProfile;
   status: "active" | "completed" | "paused";
   current_question_index: number;
+  preset_id: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -117,4 +131,20 @@ export interface SessionStateResponse {
   questions: Question[];
   analyses: Analysis[];
   report: Report | null;
+}
+
+export interface CreatePresetRequest {
+  title: string;
+  purpose: string;
+  backgroundText?: string;
+  reportInstructions?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+}
+
+export interface CreatePresetResponse {
+  preset: {
+    slug: string;
+    adminToken: string;
+  };
 }
