@@ -58,6 +58,7 @@ export function AdminDashboard({ token }: { token: string }) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [expandedSession, setExpandedSession] = useState<string | null>(null);
+  const [surveyReports, setSurveyReports] = useState<SurveyReportInfo[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,6 +72,7 @@ export function AdminDashboard({ token }: { token: string }) {
         }
         const json = await response.json();
         setData(json);
+        setSurveyReports(json.surveyReports || []);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "予期せぬエラーが発生しました"
@@ -82,6 +84,10 @@ export function AdminDashboard({ token }: { token: string }) {
 
     fetchData();
   }, [token]);
+
+  const handleSurveyReportGenerated = (report: SurveyReportInfo) => {
+    setSurveyReports((prev) => [report, ...prev]);
+  };
 
   if (loading) {
     return (
@@ -102,16 +108,11 @@ export function AdminDashboard({ token }: { token: string }) {
     );
   }
 
-  const { preset, sessions, responses, reports, surveyReports: initialSurveyReports } = data;
-  const [surveyReports, setSurveyReports] = useState<SurveyReportInfo[]>(initialSurveyReports || []);
+  const { preset, sessions, responses, reports } = data;
   const surveyUrl = `${window.location.origin}/preset/${preset.slug}`;
 
   const completedSessions = sessions.filter((s) => s.status === "completed");
   const activeSessions = sessions.filter((s) => s.status === "active");
-
-  const handleSurveyReportGenerated = (report: SurveyReportInfo) => {
-    setSurveyReports((prev) => [report, ...prev]);
-  };
 
   return (
     <div className="space-y-8">
