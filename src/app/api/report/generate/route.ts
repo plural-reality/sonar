@@ -21,6 +21,7 @@ interface SessionData {
   purpose: string;
   background_text: string | null;
   report_instructions: string | null;
+  key_questions: string[] | null;
   status: string;
 }
 
@@ -95,10 +96,12 @@ export async function POST(request: NextRequest) {
         : 1;
 
     // Generate report
+    const keyQuestions = Array.isArray(session.key_questions) ? session.key_questions : [];
     const prompt = buildReportPrompt({
       purpose: session.purpose,
       backgroundText: session.background_text || "",
       reportInstructions: session.report_instructions || undefined,
+      keyQuestions: keyQuestions.length > 0 ? keyQuestions : undefined,
       allQA,
       allAnalyses: analyses.map((a) => a.analysis_text),
       version: newVersion,

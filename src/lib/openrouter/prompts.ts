@@ -22,6 +22,7 @@ function formatAnswerText(
 export interface QuestionGenerationContext {
   purpose: string;
   backgroundText: string;
+  keyQuestions?: string[];
   previousQA: Array<{
     index: number;
     statement: string;
@@ -52,6 +53,17 @@ export function buildQuestionGenerationPrompt(
     })
     .join("\n\n");
 
+  const keyQuestionsSection =
+    ctx.keyQuestions && ctx.keyQuestions.length > 0
+      ? `## キークエスチョン（調査の軸となる問い）
+以下のキークエスチョンを軸として、多角的に深掘りするステートメントを生成してください。
+各キークエスチョンに対して偏りなくカバーするよう意識してください。
+
+${ctx.keyQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
+
+`
+      : "";
+
   return `あなたは内省支援の専門家であり、ステートメント設計のプロフェッショナルです。
 ユーザーが自分自身のスタンスや価値観を明確にするためのステートメントを生成してください。
 
@@ -61,7 +73,7 @@ ${ctx.purpose}
 ## 背景情報
 ${ctx.backgroundText || "特になし"}
 
-## これまでのステートメントと回答
+${keyQuestionsSection}## これまでのステートメントと回答
 ${qaHistory || "まだ項目はありません（最初の5問を生成）"}
 
 ## 現在のフェーズと指針
@@ -183,6 +195,7 @@ export interface ReportGenerationContext {
   purpose: string;
   backgroundText: string;
   reportInstructions?: string;
+  keyQuestions?: string[];
   allQA: Array<{
     index: number;
     statement: string;
@@ -215,6 +228,25 @@ ${ctx.reportInstructions}
 `
     : "";
 
+  const keyQuestionsSection =
+    ctx.keyQuestions && ctx.keyQuestions.length > 0
+      ? `## 調査項目（具体的に聞きたかった項目）
+${ctx.keyQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
+
+`
+      : "";
+
+  const keyQuestionsReportStructure =
+    ctx.keyQuestions && ctx.keyQuestions.length > 0
+      ? `
+6. **調査項目ごとの結論**
+   - 以下の各項目について、回答データから読み取れる結論を述べてください
+${ctx.keyQuestions.map((q, i) => `   - 項目${i + 1}: ${q}`).join("\n")}
+   - 各項目につき200-400文字で、回答の根拠（質問番号の引用）とともに結論を記述する
+   - 明確な傾向がある場合はそれを示し、判断が難しい場合はその旨を正直に述べる
+`
+      : "";
+
   return `あなたは深い洞察力と共感性を持つ内省支援の専門家です。
 ユーザーの${ctx.allQA.length}問の回答をもとに、詳細な診断レポートを作成してください。
 
@@ -224,7 +256,7 @@ ${ctx.purpose}
 ## 背景情報
 ${ctx.backgroundText || "特になし"}
 
-${reportInstructionsSection}## 中間分析
+${keyQuestionsSection}${reportInstructionsSection}## 中間分析
 ${analysesText}
 
 ## 全質問と回答
@@ -260,7 +292,7 @@ ${qaFull}
 5. **まとめ**（300-500文字）
    - 励ましと、次の一歩へのエール
    - ユーザーの強みを再確認する一文
-
+${keyQuestionsReportStructure}
 ### 引用形式
 - 質問番号は [12] のように角括弧で囲む
 - 複数引用は [12][34][56] のように連続させる
@@ -289,6 +321,7 @@ export interface SurveyReportGenerationContext {
   purpose: string;
   backgroundText: string;
   reportInstructions?: string;
+  keyQuestions?: string[];
   customInstructions?: string;
   participants: SurveyReportParticipant[];
 }
@@ -327,9 +360,29 @@ ${reportBlock}`;
     ? `## アンケート設計者からのレポート指示\n${ctx.reportInstructions}\n\n`
     : "";
 
+  const keyQuestionsSection =
+    ctx.keyQuestions && ctx.keyQuestions.length > 0
+      ? `## 調査項目（具体的に聞きたかった項目）
+${ctx.keyQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
+
+`
+      : "";
+
   const customInstructionsSection = ctx.customInstructions
     ? `## レポート生成時の追加指示\n${ctx.customInstructions}\n\n`
     : "";
+
+  const keyQuestionsReportStructure =
+    ctx.keyQuestions && ctx.keyQuestions.length > 0
+      ? `
+7. **調査項目ごとの結論**
+   - 以下の各項目について、全参加者の回答データから読み取れる結論を述べてください
+${ctx.keyQuestions.map((q, i) => `   - 項目${i + 1}: ${q}`).join("\n")}
+   - 各項目につき300-500文字で、参加者間の傾向・分布を含めた結論を記述する
+   - 回答の引用（[U1-Q12] 形式）で根拠を示す
+   - 合意が得られた点と意見が分かれた点を区別して述べる
+`
+      : "";
 
   return `あなたは調査分析の専門家であり、複数の回答者のデータから全体傾向を読み解くプロフェッショナルです。
 以下のアンケートの全参加者の回答データと個人レポートをもとに、全体を俯瞰する総合レポートを作成してください。
@@ -340,7 +393,7 @@ ${ctx.purpose}
 ## 背景情報
 ${ctx.backgroundText || "特になし"}
 
-${reportInstructionsSection}${customInstructionsSection}## 参加者データ（全${ctx.participants.length}名）
+${keyQuestionsSection}${reportInstructionsSection}${customInstructionsSection}## 参加者データ（全${ctx.participants.length}名）
 
 ${participantBlocks}
 
@@ -378,7 +431,7 @@ ${participantBlocks}
 6. **まとめと示唆**（300-500文字）
    - 全体として何が言えるか
    - このデータから得られる知見や次のアクションへの示唆
-
+${keyQuestionsReportStructure}
 ### 引用形式
 - 特定の参加者の特定の質問への回答を引用するときは [U1-Q12] のように参加者番号と質問番号を角括弧で囲む
 - 複数引用は [U1-Q12][U3-Q12][U5-Q12] のように連続させる

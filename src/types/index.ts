@@ -5,6 +5,7 @@ export interface Preset {
   purpose: string;
   background_text: string | null;
   report_instructions: string | null;
+  key_questions: string[];
   og_title: string | null;
   og_description: string | null;
   created_at: string;
@@ -140,6 +141,7 @@ export interface CreatePresetRequest {
   purpose: string;
   backgroundText?: string;
   reportInstructions?: string;
+  keyQuestions?: string[];
   reportTarget?: number;
   ogTitle?: string;
   ogDescription?: string;

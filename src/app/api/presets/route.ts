@@ -8,6 +8,7 @@ const createPresetSchema = z.object({
   purpose: z.string().min(1, "目的を入力してください").max(5000),
   backgroundText: z.string().max(50000).optional(),
   reportInstructions: z.string().max(10000).optional(),
+  keyQuestions: z.array(z.string().max(500)).max(20).optional(),
   reportTarget: z.number().int().min(5).refine((v) => v % 5 === 0, {
     message: "回答数は5の倍数で指定してください",
   }).optional(),
@@ -34,6 +35,7 @@ export async function POST(request: NextRequest) {
       p_report_instructions: validated.reportInstructions || null,
       p_og_title: validated.ogTitle || null,
       p_og_description: validated.ogDescription || null,
+      p_key_questions: validated.keyQuestions || [],
       p_report_target: validated.reportTarget || 25,
     });
 

@@ -8,6 +8,7 @@ const createSessionSchema = z.object({
   backgroundText: z.string().max(50000).optional(),
   title: z.string().max(100).optional(),
   reportInstructions: z.string().max(10000).optional(),
+  keyQuestions: z.array(z.string().max(500)).max(20).optional(),
   presetId: z.string().uuid().optional(),
   reportTarget: z.number().int().min(5).refine((v) => v % 5 === 0, {
     message: "回答数は5の倍数で指定してください",
@@ -29,6 +30,7 @@ export async function POST(request: NextRequest) {
         purpose: validated.purpose,
         background_text: validated.backgroundText || null,
         report_instructions: validated.reportInstructions || null,
+        key_questions: validated.keyQuestions || [],
         title: validated.title || validated.purpose.slice(0, 50),
         phase_profile: generatePhaseProfile(reportTarget),
         report_target: reportTarget,

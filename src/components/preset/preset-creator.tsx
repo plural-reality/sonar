@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import { PdfUpload } from "@/components/session/pdf-upload";
 
 interface CreatedPreset {
@@ -13,10 +13,76 @@ export function PresetCreator() {
   const [purpose, setPurpose] = useState("");
   const [backgroundText, setBackgroundText] = useState("");
   const [reportInstructions, setReportInstructions] = useState("");
+  const [keyQuestions, setKeyQuestions] = useState<string[]>([]);
+  const [isGeneratingKeyQuestions, setIsGeneratingKeyQuestions] = useState(false);
   const [reportTarget, setReportTarget] = useState(25);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [created, setCreated] = useState<CreatedPreset | null>(null);
+
+  const generateKeyQuestions = useCallback(async () => {
+    if (!purpose.trim()) return;
+
+    setIsGeneratingKeyQuestions(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/presets/generate-key-questions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purpose,
+          backgroundText: backgroundText || undefined,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(
+          data.error || "項目の生成に失敗しました"
+        );
+      }
+
+      const { keyQuestions: generated } = await response.json();
+      setKeyQuestions(generated);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "予期せぬエラーが発生しました"
+      );
+    } finally {
+      setIsGeneratingKeyQuestions(false);
+    }
+  }, [purpose, backgroundText]);
+
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const dragCounter = useRef(0);
+
+  const updateKeyQuestion = (index: number, value: string) => {
+    setKeyQuestions((prev) => {
+      const updated = [...prev];
+      updated[index] = value;
+      return updated;
+    });
+  };
+
+  const removeKeyQuestion = (index: number) => {
+    setKeyQuestions((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const addKeyQuestion = () => {
+    setKeyQuestions((prev) => [...prev, ""]);
+  };
+
+  const moveKeyQuestion = (from: number, to: number) => {
+    if (from === to) return;
+    setKeyQuestions((prev) => {
+      const updated = [...prev];
+      const [moved] = updated.splice(from, 1);
+      updated.splice(to, 0, moved);
+      return updated;
+    });
+  };
 
   const handlePdfExtract = (text: string) => {
     setBackgroundText((prev) => prev + "\n\n--- PDF Content ---\n" + text);
@@ -28,6 +94,8 @@ export function PresetCreator() {
     setIsSubmitting(true);
 
     try {
+      const filteredKeyQuestions = keyQuestions.filter((q) => q.trim());
+
       const response = await fetch("/api/presets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -36,6 +104,8 @@ export function PresetCreator() {
           purpose,
           backgroundText: backgroundText || undefined,
           reportInstructions: reportInstructions || undefined,
+          keyQuestions:
+            filteredKeyQuestions.length > 0 ? filteredKeyQuestions : undefined,
           reportTarget,
         }),
       });
@@ -165,6 +235,109 @@ export function PresetCreator() {
       </div>
 
       <PdfUpload onExtract={handlePdfExtract} />
+
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <label className="block text-sm font-medium text-gray-700">
+            具体的に聞きたい項目（任意）
+          </label>
+          <button
+            type="button"
+            onClick={generateKeyQuestions}
+            disabled={isGeneratingKeyQuestions || !purpose.trim()}
+            className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {isGeneratingKeyQuestions ? "生成中..." : "AIで生成する"}
+          </button>
+        </div>
+        <p className="text-xs text-gray-500 mb-3">
+          アンケートで掘り下げたいポイントを設定できます。ここで設定した項目を軸に、AIが具体的な質問を生成します。「AIで生成する」ボタンで目的・背景情報から自動生成することも、手動で追加・編集することもできます。
+        </p>
+
+        {keyQuestions.length > 0 && (
+          <div className="space-y-1 mb-3">
+            {keyQuestions.map((question, index) => (
+              <div
+                key={index}
+                draggable
+                onDragStart={() => {
+                  setDragIndex(index);
+                  dragCounter.current = 0;
+                }}
+                onDragEnd={() => {
+                  if (dragIndex !== null && dragOverIndex !== null && dragIndex !== dragOverIndex) {
+                    moveKeyQuestion(dragIndex, dragOverIndex);
+                  }
+                  setDragIndex(null);
+                  setDragOverIndex(null);
+                  dragCounter.current = 0;
+                }}
+                onDragEnter={() => {
+                  dragCounter.current++;
+                  setDragOverIndex(index);
+                }}
+                onDragLeave={() => {
+                  dragCounter.current--;
+                  if (dragCounter.current === 0) {
+                    setDragOverIndex((prev) => (prev === index ? null : prev));
+                  }
+                }}
+                onDragOver={(e) => e.preventDefault()}
+                className={`flex gap-1.5 items-start rounded-lg transition-colors ${
+                  dragIndex === index
+                    ? "opacity-40"
+                    : dragOverIndex === index && dragIndex !== null
+                      ? "bg-blue-50 ring-1 ring-blue-200"
+                      : ""
+                }`}
+              >
+                <div
+                  className="mt-2 cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500 transition-colors flex-shrink-0"
+                  title="ドラッグで並び替え"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="9" cy="6" r="1.5" />
+                    <circle cx="15" cy="6" r="1.5" />
+                    <circle cx="9" cy="12" r="1.5" />
+                    <circle cx="15" cy="12" r="1.5" />
+                    <circle cx="9" cy="18" r="1.5" />
+                    <circle cx="15" cy="18" r="1.5" />
+                  </svg>
+                </div>
+                <span className="text-xs text-gray-400 mt-3 min-w-[1.25rem] text-right">
+                  {index + 1}.
+                </span>
+                <textarea
+                  value={question}
+                  onChange={(e) => updateKeyQuestion(index, e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  rows={3}
+                  style={{ fieldSizing: "content" } as React.CSSProperties}
+                  placeholder="聞きたい項目を入力..."
+                />
+                <button
+                  type="button"
+                  onClick={() => removeKeyQuestion(index)}
+                  className="mt-2 text-gray-300 hover:text-red-500 transition-colors flex-shrink-0"
+                  title="削除"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={addKeyQuestion}
+          className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+        >
+          + 項目を追加
+        </button>
+      </div>
 
       <div>
         <label

@@ -18,14 +18,10 @@ export async function callOpenRouter(
   options: {
     temperature?: number;
     maxTokens?: number;
+    reasoning?: { effort: "low" | "medium" | "high" };
   } = {}
 ): Promise<string> {
-  const payload: {
-    model: string;
-    messages: OpenRouterMessage[];
-    temperature: number;
-    max_tokens?: number;
-  } = {
+  const payload: Record<string, unknown> = {
     model: "google/gemini-3-flash-preview",
     messages,
     temperature: options.temperature ?? 0.7,
@@ -33,6 +29,10 @@ export async function callOpenRouter(
 
   if (options.maxTokens !== undefined) {
     payload.max_tokens = options.maxTokens;
+  }
+
+  if (options.reasoning) {
+    payload.reasoning = options.reasoning;
   }
 
   console.log("[openrouter] request", JSON.stringify(payload));

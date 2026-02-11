@@ -45,10 +45,10 @@ export async function POST(
 
     const preset = presetRows[0];
 
-    // Fetch full preset info (purpose, background_text, report_instructions)
+    // Fetch full preset info (purpose, background_text, report_instructions, key_questions)
     const { data: presetFull } = await supabase
       .from("presets")
-      .select("purpose, background_text, report_instructions")
+      .select("purpose, background_text, report_instructions, key_questions")
       .eq("id", preset.id)
       .single();
 
@@ -173,10 +173,12 @@ export async function POST(
     }
 
     // Build prompt and call LLM
+    const keyQuestions = Array.isArray(presetFull.key_questions) ? presetFull.key_questions as string[] : [];
     const prompt = buildSurveyReportPrompt({
       purpose: presetFull.purpose,
       backgroundText: presetFull.background_text || "",
       reportInstructions: presetFull.report_instructions || undefined,
+      keyQuestions: keyQuestions.length > 0 ? keyQuestions : undefined,
       customInstructions: customInstructions || undefined,
       participants,
     });
@@ -184,7 +186,7 @@ export async function POST(
     try {
       const reportText = await callOpenRouter(
         [{ role: "user", content: prompt }],
-        { temperature: 0.7, maxTokens: 8000 }
+        { temperature: 0.7, maxTokens: 8000, reasoning: { effort: "high" } }
       );
 
       // Update with completed report
