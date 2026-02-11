@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import type { SessionPreset } from "@/lib/presets";
 
 interface PresetSessionStarterProps {
@@ -10,6 +10,7 @@ interface PresetSessionStarterProps {
 
 export function PresetSessionStarter({ preset }: PresetSessionStarterProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const startedRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,7 +54,9 @@ export function PresetSessionStarter({ preset }: PresetSessionStarterProps) {
           JSON.stringify(sessions.slice(0, 20))
         );
 
-        router.replace(`/session/${sessionId}`);
+        const mode = searchParams.get("mode");
+        const query = mode ? `?mode=${encodeURIComponent(mode)}` : "";
+        router.replace(`/session/${sessionId}${query}`);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "予期せぬエラーが発生しました"
@@ -62,7 +65,7 @@ export function PresetSessionStarter({ preset }: PresetSessionStarterProps) {
     };
 
     startSession();
-  }, [preset, router]);
+  }, [preset, router, searchParams]);
 
   if (!error) {
     return null;
