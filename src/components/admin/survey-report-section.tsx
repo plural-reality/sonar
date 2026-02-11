@@ -42,10 +42,14 @@ export function SurveyReportSection({
   responses,
   onReportGenerated,
 }: SurveyReportSectionProps) {
+  const latestCompletedReport = surveyReports.find(
+    (r) => r.status === "completed"
+  );
   const [generating, setGenerating] = useState(false);
   const [customInstructions, setCustomInstructions] = useState("");
-  const [showInstructionsInput, setShowInstructionsInput] = useState(false);
-  const [expandedReportId, setExpandedReportId] = useState<string | null>(null);
+  const [expandedReportId, setExpandedReportId] = useState<string | null>(
+    latestCompletedReport?.id ?? null
+  );
   const [error, setError] = useState<string | null>(null);
 
   // Build participant data for citation lookup (sorted by created_at asc for stable user numbering)
@@ -91,7 +95,6 @@ export function SurveyReportSection({
       const data = await res.json();
       onReportGenerated(data.report);
       setCustomInstructions("");
-      setShowInstructionsInput(false);
       setExpandedReportId(data.report.id);
     } catch (err) {
       setError(
@@ -110,40 +113,24 @@ export function SurveyReportSection({
 
       {/* Generate controls */}
       <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4">
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-600">
-              全参加者の回答をもとに、アンケート全体の傾向を分析するレポートを生成します。
-            </p>
-          </div>
+        <div className="flex flex-col gap-2">
+          <p className="text-sm text-gray-600">
+            全参加者の回答をもとに、アンケート全体の傾向を分析するレポートを生成します。
+          </p>
 
-          {showInstructionsInput && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                追加の指示（任意）
-              </label>
-              <textarea
-                value={customInstructions}
-                onChange={(e) => setCustomInstructions(e.target.value)}
-                placeholder="例: 年代別の傾向にも注目してほしい、特定のテーマについて深掘りしてほしい..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 placeholder:text-gray-400 resize-y min-h-[80px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-          )}
+          <textarea
+            value={customInstructions}
+            onChange={(e) => setCustomInstructions(e.target.value)}
+            placeholder="追加の指示（任意）: 年代別の傾向にも注目してほしい、特定のテーマについて深掘りしてほしい..."
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 placeholder:text-gray-400 resize-y min-h-[56px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
 
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => setShowInstructionsInput(!showInstructionsInput)}
-              className="px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              {showInstructionsInput ? "指示を閉じる" : "指示を追加"}
-            </button>
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={handleGenerate}
               disabled={generating || sessions.length === 0}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              className="px-4 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
             >
               {generating && (
                 <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
