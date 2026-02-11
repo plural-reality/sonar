@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 
 interface CreatedPreset {
   slug: string;
@@ -52,6 +52,10 @@ export function PresetCreator() {
     }
   }, [purpose, backgroundText]);
 
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const dragCounter = useRef(0);
+
   const updateKeyQuestion = (index: number, value: string) => {
     setKeyQuestions((prev) => {
       const updated = [...prev];
@@ -66,6 +70,16 @@ export function PresetCreator() {
 
   const addKeyQuestion = () => {
     setKeyQuestions((prev) => [...prev, ""]);
+  };
+
+  const moveKeyQuestion = (from: number, to: number) => {
+    if (from === to) return;
+    setKeyQuestions((prev) => {
+      const updated = [...prev];
+      const [moved] = updated.splice(from, 1);
+      updated.splice(to, 0, moved);
+      return updated;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -232,10 +246,56 @@ export function PresetCreator() {
         </p>
 
         {keyQuestions.length > 0 && (
-          <div className="space-y-2 mb-3">
+          <div className="space-y-1 mb-3">
             {keyQuestions.map((question, index) => (
-              <div key={index} className="flex gap-2 items-start">
-                <span className="text-xs text-gray-400 mt-3 min-w-[1.5rem] text-right">
+              <div
+                key={index}
+                draggable
+                onDragStart={() => {
+                  setDragIndex(index);
+                  dragCounter.current = 0;
+                }}
+                onDragEnd={() => {
+                  if (dragIndex !== null && dragOverIndex !== null && dragIndex !== dragOverIndex) {
+                    moveKeyQuestion(dragIndex, dragOverIndex);
+                  }
+                  setDragIndex(null);
+                  setDragOverIndex(null);
+                  dragCounter.current = 0;
+                }}
+                onDragEnter={() => {
+                  dragCounter.current++;
+                  setDragOverIndex(index);
+                }}
+                onDragLeave={() => {
+                  dragCounter.current--;
+                  if (dragCounter.current === 0) {
+                    setDragOverIndex((prev) => (prev === index ? null : prev));
+                  }
+                }}
+                onDragOver={(e) => e.preventDefault()}
+                className={`flex gap-1.5 items-start rounded-lg transition-colors ${
+                  dragIndex === index
+                    ? "opacity-40"
+                    : dragOverIndex === index && dragIndex !== null
+                      ? "bg-blue-50 ring-1 ring-blue-200"
+                      : ""
+                }`}
+              >
+                <div
+                  className="mt-2 cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500 transition-colors flex-shrink-0"
+                  title="ドラッグで並び替え"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="9" cy="6" r="1.5" />
+                    <circle cx="15" cy="6" r="1.5" />
+                    <circle cx="9" cy="12" r="1.5" />
+                    <circle cx="15" cy="12" r="1.5" />
+                    <circle cx="9" cy="18" r="1.5" />
+                    <circle cx="15" cy="18" r="1.5" />
+                  </svg>
+                </div>
+                <span className="text-xs text-gray-400 mt-3 min-w-[1.25rem] text-right">
                   {index + 1}.
                 </span>
                 <textarea
@@ -245,10 +305,34 @@ export function PresetCreator() {
                   rows={2}
                   placeholder="キークエスチョンを入力..."
                 />
+                <div className="flex flex-col gap-0.5 mt-1 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => moveKeyQuestion(index, index - 1)}
+                    disabled={index === 0}
+                    className="text-gray-300 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    title="上に移動"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveKeyQuestion(index, index + 1)}
+                    disabled={index === keyQuestions.length - 1}
+                    className="text-gray-300 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    title="下に移動"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                </div>
                 <button
                   type="button"
                   onClick={() => removeKeyQuestion(index)}
-                  className="mt-2 text-gray-400 hover:text-red-500 transition-colors"
+                  className="mt-2 text-gray-300 hover:text-red-500 transition-colors flex-shrink-0"
                   title="削除"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
