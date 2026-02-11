@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { PresetCreator } from "@/components/preset/preset-creator";
+import { FormHistory } from "@/components/preset/form-history";
 
 export default function HomePage() {
   return (
@@ -21,6 +22,10 @@ export default function HomePage() {
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <PresetCreator />
+        </div>
+
+        <div className="mt-6">
+          <FormHistory />
         </div>
       </div>
     </main>

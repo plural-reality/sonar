@@ -117,6 +117,26 @@ export function PresetCreator() {
 
       const { preset } = await response.json();
       setCreated(preset);
+
+      // Save to localStorage for form history
+      try {
+        const presets = JSON.parse(
+          localStorage.getItem("sonar_presets") || "[]"
+        );
+        presets.unshift({
+          slug: preset.slug,
+          title,
+          adminToken: preset.adminToken,
+          createdAt: new Date().toISOString(),
+        });
+        localStorage.setItem(
+          "sonar_presets",
+          JSON.stringify(presets.slice(0, 20))
+        );
+        window.dispatchEvent(new Event("sonar_presets_updated"));
+      } catch {
+        // localStorage unavailable, ignore
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "予期せぬエラーが発生しました"
