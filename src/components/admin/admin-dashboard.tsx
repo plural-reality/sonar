@@ -49,9 +49,12 @@ export function AdminDashboard({ token }: { token: string }) {
   const [expandedSession, setExpandedSession] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const fetchingRef = useRef(false);
 
   const fetchData = useCallback(
     async (isInitial: boolean) => {
+      if (fetchingRef.current) return;
+      fetchingRef.current = true;
       try {
         const response = await fetch(`/api/admin/${token}`);
         if (!response.ok) {
@@ -63,7 +66,7 @@ export function AdminDashboard({ token }: { token: string }) {
         const json = await response.json();
         setData(json);
         setLastUpdated(new Date());
-        if (isInitial) setError(null);
+        setError(null);
       } catch (err) {
         if (isInitial) {
           setError(
@@ -72,6 +75,7 @@ export function AdminDashboard({ token }: { token: string }) {
         }
         // On polling errors, silently keep the existing data
       } finally {
+        fetchingRef.current = false;
         if (isInitial) setLoading(false);
       }
     },
