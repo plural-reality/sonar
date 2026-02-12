@@ -1,10 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import { PresetCreator } from "@/components/preset/preset-creator";
 import { FormHistory } from "@/components/preset/form-history";
 import { createClient } from "@/lib/supabase/server";
-import { AuthHeader } from "@/components/auth/auth-header";
 import { PresetList } from "@/components/dashboard/preset-list";
+import { AppHeader } from "@/components/ui/app-header";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -53,41 +52,20 @@ export default async function HomePage() {
   const showDashboard = user && userPresets.length > 0;
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-[var(--background)]">
       <div className="max-w-3xl mx-auto px-4 py-8 md:py-12">
-        {/* Auth header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Image
-              src="/logo.png"
-              alt="倍速アンケート"
-              width={120}
-              height={24}
-              priority
-            />
-          </div>
-          {user ? (
-            <AuthHeader email={user.email ?? ""} />
-          ) : (
-            <a
-              href="/login"
-              className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-            >
-              ログイン
-            </a>
-          )}
-        </div>
+        <AppHeader showLogo userEmail={user?.email ?? null} />
 
         {showDashboard ? (
           <>
             {/* Create new — Google Forms style */}
             <div className="mb-8">
-              <p className="text-sm font-medium text-gray-700 mb-3">
+              <p className="text-sm font-medium text-[var(--foreground)] mb-3">
                 新しいアンケートを作成
               </p>
               <Link
                 href="/create"
-                className="inline-flex items-center justify-center w-40 h-28 bg-white border-2 border-gray-200 rounded-lg hover:border-blue-400 hover:shadow-md transition-all group"
+                className="inline-flex items-center justify-center w-40 h-28 bg-[var(--card)] border-2 border-[var(--border)] rounded-lg hover:border-blue-400 hover:shadow-md transition-all group"
               >
                 <svg
                   className="w-10 h-10 text-gray-300 group-hover:text-blue-500 transition-colors"
@@ -110,11 +88,11 @@ export default async function HomePage() {
         ) : (
           <>
             <div className="text-center mb-8">
-              <p className="text-gray-600 text-sm">
+              <p className="text-[var(--muted-foreground)] text-sm">
                 AIとの対話で、深い意見を素早く集める
               </p>
             </div>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="bg-[var(--card)] rounded-xl shadow-sm border border-[var(--border)] p-6">
               <PresetCreator />
             </div>
             <div className="mt-6">

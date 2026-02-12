@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ManageTabs } from "@/components/manage/manage-tabs";
+import { AppHeader } from "@/components/ui/app-header";
 
 export const metadata: Metadata = {
   title: "管理画面 - 倍速アンケート",
@@ -36,7 +36,7 @@ export default async function ManagePage({ params }: ManagePageProps) {
 
   if (tokenError || !tokenData || tokenData.length === 0) {
     return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <main className="min-h-screen bg-[var(--background)] flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-xl font-bold text-gray-900 mb-2">
             アクセス権限がありません
@@ -54,7 +54,7 @@ export default async function ManagePage({ params }: ManagePageProps) {
 
   const adminToken = tokenData[0].admin_token;
 
-  // Get preset details for settings tab
+  // Get preset details
   const { data: preset } = await supabase
     .from("presets")
     .select(
@@ -64,35 +64,13 @@ export default async function ManagePage({ params }: ManagePageProps) {
     .single();
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-[var(--background)]">
       <div className="max-w-5xl mx-auto px-4 py-6">
-        {/* Header — Google Forms style */}
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="text-gray-400 hover:text-gray-600 transition-colors"
-              title="ダッシュボードに戻る"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </Link>
-            <h1 className="text-lg font-bold text-gray-900 truncate">
-              {preset?.title ?? slug}
-            </h1>
-          </div>
-        </div>
+        <AppHeader
+          backHref="/"
+          title={preset?.title ?? slug}
+          userEmail={user.email ?? null}
+        />
 
         <ManageTabs
           token={adminToken}

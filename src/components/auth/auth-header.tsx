@@ -3,11 +3,11 @@
 export function AuthHeader({ email }: { email: string }) {
   return (
     <div className="flex items-center gap-3 text-sm">
-      <span className="text-gray-600">{email}</span>
+      <span className="text-[var(--muted-foreground)]">{email}</span>
       <form action="/auth/signout" method="post">
         <button
           type="submit"
-          className="text-gray-400 hover:text-gray-600 transition-colors"
+          className="text-[var(--muted-foreground)] opacity-70 hover:opacity-100 transition-opacity"
         >
           ログアウト
         </button>
