@@ -15,7 +15,7 @@ export default function HomePage() {
             className="mx-auto mb-2"
             priority
           />
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-700 text-sm">
             AIとの対話で、深い意見を素早く集める
           </p>
         </div>

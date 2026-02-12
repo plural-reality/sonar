@@ -15,6 +15,7 @@ export function PresetCreator() {
   const [reportInstructions, setReportInstructions] = useState("");
   const [keyQuestions, setKeyQuestions] = useState<string[]>([]);
   const [isGeneratingKeyQuestions, setIsGeneratingKeyQuestions] = useState(false);
+  const [isGeneratingBackground, setIsGeneratingBackground] = useState(false);
   const [reportTarget, setReportTarget] = useState(25);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,6 +55,38 @@ export function PresetCreator() {
       setIsGeneratingKeyQuestions(false);
     }
   }, [purpose, backgroundText]);
+
+  const generateBackground = useCallback(async () => {
+    if (!purpose.trim()) return;
+
+    setIsGeneratingBackground(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/presets/generate-background", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title || undefined,
+          purpose,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || "背景情報の生成に失敗しました");
+      }
+
+      const { backgroundText: generated } = await response.json();
+      setBackgroundText(generated);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "予期せぬエラーが発生しました"
+      );
+    } finally {
+      setIsGeneratingBackground(false);
+    }
+  }, [purpose, title]);
 
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -170,7 +203,7 @@ export function PresetCreator() {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               回答用URL（共有用）
             </label>
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="text-xs text-gray-600 mb-2">
               このURLを回答者に共有してください
             </p>
             <CopyableUrl url={surveyUrl} />
@@ -180,7 +213,7 @@ export function PresetCreator() {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               管理画面URL
             </label>
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="text-xs text-gray-600 mb-2">
               回答一覧を確認できます。このURLは管理者のみに共有してください。
             </p>
             <CopyableUrl url={adminUrl} />
@@ -199,9 +232,9 @@ export function PresetCreator() {
       <div>
         <label
           htmlFor="title"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-medium text-gray-900 mb-2"
         >
-          タイトル
+          タイトル <span className="text-red-500">*</span>
         </label>
         <input
           id="title"
@@ -217,11 +250,11 @@ export function PresetCreator() {
       <div>
         <label
           htmlFor="purpose"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-medium text-gray-900 mb-2"
         >
-          質問の目的・テーマ
+          質問の目的・テーマ <span className="text-red-500">*</span>
         </label>
-        <p className="text-xs text-gray-500 mb-2">
+        <p className="text-xs text-gray-600 mb-2">
           回答者にどのようなテーマについて考えてほしいかを記述してください。AIがこの目的に沿って質問を生成します。
         </p>
         <textarea
@@ -236,13 +269,23 @@ export function PresetCreator() {
       </div>
 
       <div>
-        <label
-          htmlFor="background"
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          背景情報（任意）
-        </label>
-        <p className="text-xs text-gray-500 mb-2">
+        <div className="flex items-center justify-between mb-2">
+          <label
+            htmlFor="background"
+            className="block text-sm font-medium text-gray-900"
+          >
+            背景情報 <span className="text-xs font-normal text-gray-500">任意</span>
+          </label>
+          <button
+            type="button"
+            onClick={generateBackground}
+            disabled={isGeneratingBackground || !purpose.trim()}
+            className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {isGeneratingBackground ? "生成中..." : "AIで生成する"}
+          </button>
+        </div>
+        <p className="text-xs text-gray-600 mb-2">
           回答者に前提として知っておいてほしい情報、参考資料の内容などを入力してください。
         </p>
         <textarea
@@ -259,8 +302,8 @@ export function PresetCreator() {
 
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-gray-700">
-            具体的に聞きたい項目（任意）
+          <label className="block text-sm font-medium text-gray-900">
+            具体的に聞きたい項目 <span className="text-xs font-normal text-gray-500">任意</span>
           </label>
           <button
             type="button"
@@ -271,7 +314,7 @@ export function PresetCreator() {
             {isGeneratingKeyQuestions ? "生成中..." : "AIで生成する"}
           </button>
         </div>
-        <p className="text-xs text-gray-500 mb-3">
+        <p className="text-xs text-gray-600 mb-3">
           アンケートで掘り下げたいポイントを設定できます。ここで設定した項目を軸に、AIが具体的な質問を生成します。「AIで生成する」ボタンで目的・背景情報から自動生成することも、手動で追加・編集することもできます。
         </p>
 
@@ -325,7 +368,7 @@ export function PresetCreator() {
                     <circle cx="15" cy="18" r="1.5" />
                   </svg>
                 </div>
-                <span className="text-xs text-gray-400 mt-3 min-w-[1.25rem] text-right">
+                <span className="text-xs text-gray-500 mt-3 min-w-[1.25rem] text-right">
                   {index + 1}.
                 </span>
                 <textarea
@@ -383,11 +426,11 @@ export function PresetCreator() {
           <div>
             <label
               htmlFor="reportInstructions"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-gray-900 mb-2"
             >
-              回答後レポートの生成指示（任意）
+              回答後レポートの生成指示 <span className="text-xs font-normal text-gray-500">任意</span>
             </label>
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="text-xs text-gray-600 mb-2">
               回答者が全問回答した後に表示されるレポートの内容やフォーマットに関する指示があれば入力してください。
             </p>
             <textarea
@@ -403,11 +446,11 @@ export function PresetCreator() {
           <div>
             <label
               htmlFor="reportTarget"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-gray-900 mb-2"
             >
               回答数
             </label>
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="text-xs text-gray-600 mb-2">
               何問回答したらレポートを生成するかを設定します。5の倍数で指定できます。
             </p>
             <select
