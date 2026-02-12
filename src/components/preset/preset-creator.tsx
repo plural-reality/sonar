@@ -32,7 +32,7 @@ export function PresetCreator() {
   const [isGeneratingKeyQuestions, setIsGeneratingKeyQuestions] =
     useState(false);
   const [isGeneratingBackground, setIsGeneratingBackground] = useState(false);
-  const [reportTarget, setReportTarget] = useState(25);
+  const [reportTarget, setReportTarget] = useState(10);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

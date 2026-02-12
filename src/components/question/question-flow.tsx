@@ -62,16 +62,18 @@ export function QuestionFlow({
     router.push(`/report/${sessionId}`);
   }, [generateReport, router, sessionId]);
 
-  // Calculate current progress
-  const answeredCount = questions.filter(
-    (q) => q.selectedOption !== null
-  ).length;
+  // Calculate current progress — account for all question types
+  const isAnswered = (q: typeof questions[0]) => {
+    const qt = q.question_type || "radio";
+    if (qt === "text" || qt === "textarea") return !!q.answerText;
+    if (qt === "checkbox") return !!q.selectedOptions && q.selectedOptions.length > 0;
+    return q.selectedOption !== null;
+  };
+  const answeredCount = questions.filter(isAnswered).length;
   const progressTotal = Math.max(reportTarget, questions.length);
 
   // Find unanswered questions
-  const unansweredQuestions = questions.filter(
-    (q) => q.selectedOption === null
-  );
+  const unansweredQuestions = questions.filter((q) => !isAnswered(q));
   const firstUnansweredQuestion = unansweredQuestions[0] ?? null;
 
   // Scroll to unanswered question
@@ -86,30 +88,48 @@ export function QuestionFlow({
     }
   }, [firstUnansweredQuestion]);
 
-  // Handle answer selection
+  // Handle answer selection (radio/dropdown/scale — option-based)
   const handleSelect = useCallback(
     async (
       questionId: string,
       optionIndex: number,
-      freeText?: string | null
+      freeText?: string | null,
+      questionType?: string
     ) => {
       setPendingAnswer({ questionId, optionIndex, freeText });
-      await submitAnswer(questionId, optionIndex, freeText);
+      await submitAnswer(questionId, optionIndex, freeText, { questionType: questionType ?? "radio" });
       setPendingAnswer(null);
     },
     [submitAnswer]
   );
 
-  // Track whether user chose to continue beyond the target
-  const [continuedBeyondTarget, setContinuedBeyondTarget] = useState(false);
+  // Handle answer submission for non-option types (checkbox/text/textarea)
+  const handleSubmitAnswer = useCallback(
+    async (
+      questionId: string,
+      questionType: string,
+      params: {
+        selectedOption?: number | null;
+        freeText?: string | null;
+        selectedOptions?: number[] | null;
+        answerText?: string | null;
+      }
+    ) => {
+      setPendingAnswer({ questionId, optionIndex: -1 });
+      await submitAnswer(questionId, params.selectedOption ?? null, params.freeText, {
+        questionType,
+        selectedOptions: params.selectedOptions,
+        answerText: params.answerText,
+      });
+      setPendingAnswer(null);
+    },
+    [submitAnswer]
+  );
 
   // Auto-generate next batch and analysis when batch is complete
   useEffect(() => {
     const batchComplete = answeredCount > 0 && answeredCount % BATCH_SIZE === 0;
-
-    // Stop auto-generating after reaching the target — user must opt in
     const reachedTarget = answeredCount >= reportTarget;
-    if (reachedTarget && !continuedBeyondTarget) return;
 
     if (
       batchComplete &&
@@ -121,31 +141,34 @@ export function QuestionFlow({
       const analysisExists = analyses.some((a) => a.batch_index === batchIndex);
       const startIndex = (batchIndex - 1) * BATCH_SIZE + 1;
       const endIndex = batchIndex * BATCH_SIZE;
-      const nextStartIndex = endIndex + 1;
-      const nextEndIndex = endIndex + BATCH_SIZE;
-      const nextBatchCount = questions.filter(
-        (q) =>
-          q.question_index >= nextStartIndex &&
-          q.question_index <= nextEndIndex
-      ).length;
-      const needsNextBatch = nextBatchCount < BATCH_SIZE;
 
-      if (!analysisExists || needsNextBatch) {
+      // Always generate analysis
+      if (!analysisExists) {
         setProcessingBatch(true);
+        generateAnalysis(batchIndex, startIndex, endIndex);
+      }
 
-        // Fire analysis in background — don't block question generation
-        if (!analysisExists) {
-          generateAnalysis(batchIndex, startIndex, endIndex);
-        }
+      // Only auto-generate next batch when below target — beyond target, user must opt in each time
+      if (!reachedTarget) {
+        const nextStartIndex = endIndex + 1;
+        const nextEndIndex = endIndex + BATCH_SIZE;
+        const nextBatchCount = questions.filter(
+          (q) =>
+            q.question_index >= nextStartIndex &&
+            q.question_index <= nextEndIndex
+        ).length;
+        const needsNextBatch = nextBatchCount < BATCH_SIZE;
 
-        // Question generation controls processingBatch state
         if (needsNextBatch) {
+          setProcessingBatch(true);
           generateNextBatch(nextStartIndex, nextEndIndex).finally(() =>
             setProcessingBatch(false)
           );
         } else {
           setProcessingBatch(false);
         }
+      } else {
+        setProcessingBatch(false);
       }
     }
   }, [
@@ -229,9 +252,12 @@ export function QuestionFlow({
         contentBlocks.push({ type: "analysis" as const, item: analysis });
       }
 
-      // Insert finish banner after target question's analysis (only when all target questions are answered)
-      const targetBatchIndex = reportTarget / BATCH_SIZE;
-      if (batchIndex === targetBatchIndex && answeredCount >= reportTarget) {
+      // Insert finish banner after the latest completed batch when at/beyond target
+      if (
+        answeredCount >= reportTarget &&
+        answeredCount % BATCH_SIZE === 0 &&
+        batchIndex === answeredCount / BATCH_SIZE
+      ) {
         contentBlocks.push({ type: "finish-banner" as const });
       }
 
@@ -357,10 +383,17 @@ export function QuestionFlow({
                         selectedOption={question.selectedOption}
                         freeText={question.freeText ?? null}
                         onSelect={(optionIndex, freeText) =>
-                          handleSelect(question.id, optionIndex, freeText)
+                          handleSelect(question.id, optionIndex, freeText, question.question_type)
+                        }
+                        onSubmitAnswer={(params) =>
+                          handleSubmitAnswer(question.id, question.question_type || "radio", params)
                         }
                         isLoading={pendingAnswer?.questionId === question.id}
                         source={question.source === "fixed" ? "fixed" : "ai"}
+                        questionType={question.question_type}
+                        scaleConfig={question.scale_config}
+                        selectedOptions={question.selectedOptions}
+                        answerText={question.answerText}
                       />
                     </div>
                   </Fragment>
@@ -401,7 +434,7 @@ export function QuestionFlow({
                 className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-6 text-center"
               >
                 <div className="text-2xl font-bold text-blue-800 mb-2">
-                  {reportTarget}問の回答が完了しました
+                  {answeredCount}問の回答が完了しました
                 </div>
                 <p className="text-gray-600 mb-5">
                   十分なデータが集まりました。結果を確認できます。
@@ -423,22 +456,18 @@ export function QuestionFlow({
                     >
                       回答を終えて結果を見る
                     </button>
-                    {!continuedBeyondTarget && (
-                      <div>
-                        <button
-                          onClick={() => {
-                            setContinuedBeyondTarget(true);
-                            // Trigger next batch generation
-                            const nextStart = answeredCount + 1;
-                            const nextEnd = answeredCount + BATCH_SIZE;
-                            generateNextBatch(nextStart, nextEnd);
-                          }}
-                          className="text-sm text-gray-500 hover:text-blue-600 transition-colors underline underline-offset-2"
-                        >
-                          もっと深掘りする（さらに5問追加）
-                        </button>
-                      </div>
-                    )}
+                    <div>
+                      <button
+                        onClick={() => {
+                          const nextStart = answeredCount + 1;
+                          const nextEnd = answeredCount + BATCH_SIZE;
+                          generateNextBatch(nextStart, nextEnd);
+                        }}
+                        className="text-sm text-gray-500 hover:text-blue-600 transition-colors underline underline-offset-2"
+                      >
+                        もっと深掘りする（さらに5問追加）
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
