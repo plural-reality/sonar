@@ -303,7 +303,7 @@ export function ManageTabs({ token, userEmail, preset }: ManageTabsProps) {
     <div>
       {/* Google Forms–style header */}
       <header className="flex items-center gap-3 py-3 mb-1">
-        <SonarLogo className="shrink-0" />
+        <SonarLogo iconOnly className="shrink-0" />
         <span className="text-base font-semibold text-[var(--foreground)] truncate">
           {title || "無題のアンケート"}
         </span>

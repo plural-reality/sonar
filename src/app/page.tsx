@@ -35,7 +35,8 @@ export default async function HomePage() {
         .in(
           "preset_id",
           presets.map((p) => p.id)
-        );
+        )
+        .eq("status", "completed");
 
       const countMap: Record<string, number> = {};
       sessions?.forEach((s) => {

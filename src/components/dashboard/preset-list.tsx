@@ -40,7 +40,7 @@ export function PresetList({ presets }: { presets: PresetItem[] }) {
                 <span>
                   {new Date(preset.created_at).toLocaleDateString("ja-JP")}
                 </span>
-                <span>{preset.session_count}件</span>
+                <span>{preset.session_count}件の回答</span>
               </div>
             </div>
           </Link>
