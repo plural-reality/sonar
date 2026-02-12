@@ -277,8 +277,8 @@ export function ManageTabs({ token, userEmail, preset }: ManageTabsProps) {
   if (loading) {
     return (
       <div className="text-center py-12">
-        <div className="inline-block w-6 h-6 border-2 border-input border-t-blue-600 rounded-full animate-spin" />
-        <p className="text-sm text-muted-foreground mt-3">読み込み中...</p>
+        <div className="inline-block w-6 h-6 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
+        <p className="text-sm text-gray-500 mt-3">読み込み中...</p>
       </div>
     );
   }
@@ -319,7 +319,7 @@ export function ManageTabs({ token, userEmail, preset }: ManageTabsProps) {
           <button
             type="button"
             onClick={() => setShowQR(!showQR)}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg border transition-colors ${showQR ? "text-blue-700 bg-blue-50 border-blue-200" : "text-muted-foreground bg-card border hover:bg-muted"}`}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg border transition-colors ${showQR ? "text-blue-700 bg-blue-50 border-blue-200" : "text-gray-600 bg-white border-gray-200 hover:bg-gray-50"}`}
           >
             QR
           </button>
@@ -338,13 +338,13 @@ export function ManageTabs({ token, userEmail, preset }: ManageTabsProps) {
       </header>
 
       {showQR && (
-        <div className="flex justify-center py-4 mb-2 bg-card rounded-lg border border">
+        <div className="flex justify-center py-4 mb-2 bg-white rounded-lg border border-gray-200">
           <QRCodeSVG value={surveyUrl} size={140} />
         </div>
       )}
 
       {/* Tab bar */}
-      <div className="flex justify-center border-b border mb-6">
+      <div className="flex justify-center border-b border-gray-200 mb-6">
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -352,7 +352,7 @@ export function ManageTabs({ token, userEmail, preset }: ManageTabsProps) {
             className={`px-6 py-3 text-sm font-medium transition-colors relative ${
               activeTab === tab.id
                 ? "text-blue-600"
-                : "text-muted-foreground hover:text-foreground/80"
+                : "text-gray-500 hover:text-gray-700"
             }`}
           >
             {tab.label}
@@ -422,8 +422,8 @@ function SaveStatusIndicator({ status }: { status: SaveStatus }) {
 
   if (status === "saving") {
     return (
-      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground shrink-0">
-        <span className="inline-block w-3 h-3 border-1.5 border-input border-t-muted-foreground rounded-full animate-spin" />
+      <span className="inline-flex items-center gap-1 text-xs text-gray-400 shrink-0">
+        <span className="inline-block w-3 h-3 border-1.5 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
       </span>
     );
   }
@@ -587,18 +587,18 @@ function QuestionsEditTab({
         </legend>
 
         <div>
-          <label htmlFor="edit-title" className="block text-sm font-medium text-foreground mb-1">
+          <label htmlFor="edit-title" className="block text-sm font-medium text-gray-900 mb-1">
             タイトル <span className="text-red-500">*</span>
           </label>
           <input id="edit-title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} onBlur={onBlur}
             placeholder="例：新サービスのコンセプトについて"
-            className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-card" required />
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white" required />
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label htmlFor="edit-background" className="block text-sm font-medium text-foreground">
-              説明文 <span className="text-xs font-normal text-muted-foreground">任意</span>
+            <label htmlFor="edit-background" className="block text-sm font-medium text-gray-900">
+              説明文 <span className="text-xs font-normal text-gray-500">任意</span>
             </label>
             <button type="button" onClick={generateBackground} disabled={isGeneratingBackground || !purpose.trim()}
               className="text-xs px-3 py-1.5 bg-green-50 text-green-700 border border-green-200 rounded-lg hover:bg-green-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
@@ -608,7 +608,7 @@ function QuestionsEditTab({
           <p className="text-xs text-green-700/70 mb-2">回答開始前に回答者に表示される前提情報です。</p>
           <textarea id="edit-background" value={backgroundText} onChange={(e) => setBackgroundText(e.target.value)} onBlur={onBlur}
             placeholder="例：サービスの概要、ターゲットユーザー、競合との違いなど"
-            className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none bg-card" rows={4} />
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none bg-white" rows={4} />
         </div>
       </fieldset>
 
@@ -630,16 +630,16 @@ function QuestionsEditTab({
           const qt = q.question_type || "radio";
           const needsOptions = qt !== "text" && qt !== "textarea";
           return (
-          <div key={qIndex} className="bg-card rounded-lg border border p-4 space-y-3">
+          <div key={qIndex} className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
             <div className="flex items-start justify-between gap-2">
-              <span className="text-xs text-muted-foreground mt-2 shrink-0">Q{qIndex + 1}</span>
+              <span className="text-xs text-gray-400 mt-2 shrink-0">Q{qIndex + 1}</span>
               <div className="flex-1 space-y-2">
                 <input type="text" value={q.statement} onChange={(e) => updateFixedQuestion(qIndex, "statement", e.target.value)} onBlur={onBlur}
-                  placeholder="質問文を入力..." className="w-full px-3 py-2 border-b-2 border focus:border-ring focus:outline-none text-sm bg-transparent" />
+                  placeholder="質問文を入力..." className="w-full px-3 py-2 border-b-2 border-gray-200 focus:border-blue-500 focus:outline-none text-sm bg-transparent" />
                 <input type="text" value={q.detail} onChange={(e) => updateFixedQuestion(qIndex, "detail", e.target.value)} onBlur={onBlur}
-                  placeholder="補足説明（任意）" className="w-full px-3 py-1.5 text-xs text-muted-foreground border-b border focus:border-ring focus:outline-none bg-transparent" />
+                  placeholder="補足説明（任意）" className="w-full px-3 py-1.5 text-xs text-gray-500 border-b border-gray-100 focus:border-blue-300 focus:outline-none bg-transparent" />
               </div>
-              <button type="button" onClick={() => removeFixedQuestion(qIndex)} className="text-muted-foreground hover:text-red-500 transition-colors shrink-0 mt-1" title="質問を削除">
+              <button type="button" onClick={() => removeFixedQuestion(qIndex)} className="text-gray-300 hover:text-red-500 transition-colors shrink-0 mt-1" title="質問を削除">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                 </svg>
@@ -648,7 +648,7 @@ function QuestionsEditTab({
             {/* Question type selector */}
             <div className="pl-7">
               <select value={qt} onChange={(e) => updateFixedQuestionType(qIndex, e.target.value as QuestionType)} onBlur={onBlur}
-                className="px-2 py-1 text-xs border border rounded-md bg-muted text-muted-foreground focus:ring-1 focus:ring-ring focus:outline-none">
+                className="px-2 py-1 text-xs border border-gray-200 rounded-md bg-gray-50 text-gray-600 focus:ring-1 focus:ring-blue-400 focus:outline-none">
                 <option value="radio">ラジオボタン</option>
                 <option value="checkbox">チェックボックス</option>
                 <option value="dropdown">プルダウン</option>
@@ -659,11 +659,11 @@ function QuestionsEditTab({
             </div>
             {/* Scale config */}
             {qt === "scale" && (
-              <div className="pl-7 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-                <label className="flex items-center gap-1">最小 <input type="number" value={q.scale_config?.min ?? 1} onChange={(e) => updateScaleConfig(qIndex, "min", Number(e.target.value))} onBlur={onBlur} className="w-14 px-1.5 py-1 border border rounded text-xs" /></label>
-                <label className="flex items-center gap-1">最大 <input type="number" value={q.scale_config?.max ?? 5} onChange={(e) => updateScaleConfig(qIndex, "max", Number(e.target.value))} onBlur={onBlur} className="w-14 px-1.5 py-1 border border rounded text-xs" /></label>
-                <label className="flex items-center gap-1">左ラベル <input type="text" value={q.scale_config?.minLabel ?? ""} onChange={(e) => updateScaleConfig(qIndex, "minLabel", e.target.value)} onBlur={onBlur} placeholder="例: 低い" className="w-20 px-1.5 py-1 border border rounded text-xs" /></label>
-                <label className="flex items-center gap-1">右ラベル <input type="text" value={q.scale_config?.maxLabel ?? ""} onChange={(e) => updateScaleConfig(qIndex, "maxLabel", e.target.value)} onBlur={onBlur} placeholder="例: 高い" className="w-20 px-1.5 py-1 border border rounded text-xs" /></label>
+              <div className="pl-7 flex flex-wrap items-center gap-3 text-xs text-gray-600">
+                <label className="flex items-center gap-1">最小 <input type="number" value={q.scale_config?.min ?? 1} onChange={(e) => updateScaleConfig(qIndex, "min", Number(e.target.value))} onBlur={onBlur} className="w-14 px-1.5 py-1 border border-gray-200 rounded text-xs" /></label>
+                <label className="flex items-center gap-1">最大 <input type="number" value={q.scale_config?.max ?? 5} onChange={(e) => updateScaleConfig(qIndex, "max", Number(e.target.value))} onBlur={onBlur} className="w-14 px-1.5 py-1 border border-gray-200 rounded text-xs" /></label>
+                <label className="flex items-center gap-1">左ラベル <input type="text" value={q.scale_config?.minLabel ?? ""} onChange={(e) => updateScaleConfig(qIndex, "minLabel", e.target.value)} onBlur={onBlur} placeholder="例: 低い" className="w-20 px-1.5 py-1 border border-gray-200 rounded text-xs" /></label>
+                <label className="flex items-center gap-1">右ラベル <input type="text" value={q.scale_config?.maxLabel ?? ""} onChange={(e) => updateScaleConfig(qIndex, "maxLabel", e.target.value)} onBlur={onBlur} placeholder="例: 高い" className="w-20 px-1.5 py-1 border border-gray-200 rounded text-xs" /></label>
               </div>
             )}
             {/* Options (hidden for text/textarea) */}
@@ -671,11 +671,11 @@ function QuestionsEditTab({
             <div className="space-y-1.5 pl-7">
               {q.options.map((option, oIndex) => (
                 <div key={oIndex} className="flex items-center gap-2">
-                  <span className={`w-4 h-4 shrink-0 border-2 border-input ${qt === "checkbox" ? "rounded" : "rounded-full"}`} />
+                  <span className={`w-4 h-4 shrink-0 border-2 border-gray-300 ${qt === "checkbox" ? "rounded" : "rounded-full"}`} />
                   <input type="text" value={option} onChange={(e) => updateFixedQuestionOption(qIndex, oIndex, e.target.value)} onBlur={onBlur}
-                    placeholder={`選択肢 ${oIndex + 1}`} className="flex-1 px-2 py-1.5 text-sm border-b border focus:border-ring focus:outline-none bg-transparent" />
+                    placeholder={`選択肢 ${oIndex + 1}`} className="flex-1 px-2 py-1.5 text-sm border-b border-gray-100 focus:border-blue-400 focus:outline-none bg-transparent" />
                   {q.options.length > 2 && (
-                    <button type="button" onClick={() => removeFixedQuestionOption(qIndex, oIndex)} className="text-muted-foreground hover:text-red-500 transition-colors">
+                    <button type="button" onClick={() => removeFixedQuestionOption(qIndex, oIndex)} className="text-gray-300 hover:text-red-500 transition-colors">
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
@@ -684,8 +684,8 @@ function QuestionsEditTab({
                 </div>
               ))}
               {q.options.length < 10 && (
-                <button type="button" onClick={() => addFixedQuestionOption(qIndex)} className="flex items-center gap-2 text-xs text-muted-foreground hover:text-muted-foreground transition-colors py-1">
-                  <span className={`w-4 h-4 border-2 border-dashed border-input shrink-0 ${qt === "checkbox" ? "rounded" : "rounded-full"}`} />
+                <button type="button" onClick={() => addFixedQuestionOption(qIndex)} className="flex items-center gap-2 text-xs text-gray-400 hover:text-gray-600 transition-colors py-1">
+                  <span className={`w-4 h-4 border-2 border-dashed border-gray-300 shrink-0 ${qt === "checkbox" ? "rounded" : "rounded-full"}`} />
                   選択肢を追加
                 </button>
               )}
@@ -712,19 +712,19 @@ function QuestionsEditTab({
         </legend>
 
         <div>
-          <label htmlFor="edit-purpose" className="block text-sm font-medium text-foreground mb-1">
+          <label htmlFor="edit-purpose" className="block text-sm font-medium text-gray-900 mb-1">
             深掘りの目的 <span className="text-red-500">*</span>
           </label>
           <p className="text-xs text-purple-700/70 mb-2">AIがこの目的に沿って、各回答者に合わせた追加質問を自動生成します。</p>
           <textarea id="edit-purpose" value={purpose} onChange={(e) => setPurpose(e.target.value)} onBlur={onBlur}
             placeholder="例：新しく開発中のサービスのコンセプトに対する率直な意見を聞きたい。"
-            className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none bg-card" rows={3} required />
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none bg-white" rows={3} required />
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className="block text-sm font-medium text-foreground">
-              探索テーマ <span className="text-xs font-normal text-muted-foreground">任意</span>
+            <label className="block text-sm font-medium text-gray-900">
+              探索テーマ <span className="text-xs font-normal text-gray-500">任意</span>
             </label>
             <button type="button" onClick={generateKeyQuestions} disabled={isGeneratingKeyQuestions || !purpose.trim()}
               className="text-xs px-3 py-1.5 bg-purple-50 text-purple-700 border border-purple-200 rounded-lg hover:bg-purple-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
@@ -743,16 +743,16 @@ function QuestionsEditTab({
                   onDragLeave={() => { dragCounter.current--; if (dragCounter.current === 0) setDragOverIndex((p) => p === index ? null : p); }}
                   onDragOver={(e) => e.preventDefault()}
                   className={`flex gap-1.5 items-start rounded-lg transition-colors ${dragIndex === index ? "opacity-40" : dragOverIndex === index && dragIndex !== null ? "bg-purple-50 ring-1 ring-purple-200" : ""}`}>
-                  <div className="mt-2 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-muted-foreground transition-colors flex-shrink-0" title="ドラッグで並び替え">
+                  <div className="mt-2 cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500 transition-colors flex-shrink-0" title="ドラッグで並び替え">
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                       <circle cx="9" cy="6" r="1.5" /><circle cx="15" cy="6" r="1.5" /><circle cx="9" cy="12" r="1.5" /><circle cx="15" cy="12" r="1.5" /><circle cx="9" cy="18" r="1.5" /><circle cx="15" cy="18" r="1.5" />
                     </svg>
                   </div>
-                  <span className="text-xs text-muted-foreground mt-3 min-w-[1.25rem] text-right">{index + 1}.</span>
+                  <span className="text-xs text-gray-500 mt-3 min-w-[1.25rem] text-right">{index + 1}.</span>
                   <textarea value={question} onChange={(e) => updateKeyQuestion(index, e.target.value)} onBlur={onBlur}
-                    className="flex-1 px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm bg-card"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm bg-white"
                     rows={3} style={{ fieldSizing: "content" } as React.CSSProperties} placeholder="探索テーマを入力..." />
-                  <button type="button" onClick={() => removeKeyQuestion(index)} className="mt-2 text-muted-foreground hover:text-red-500 transition-colors flex-shrink-0" title="削除">
+                  <button type="button" onClick={() => removeKeyQuestion(index)} className="mt-2 text-gray-300 hover:text-red-500 transition-colors flex-shrink-0" title="削除">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -761,7 +761,7 @@ function QuestionsEditTab({
               ))}
             </div>
           )}
-          <button type="button" onClick={addKeyQuestion} className="text-xs text-muted-foreground hover:text-foreground/80 transition-colors">+ テーマを追加</button>
+          <button type="button" onClick={addKeyQuestion} className="text-xs text-gray-500 hover:text-gray-700 transition-colors">+ テーマを追加</button>
         </div>
       </fieldset>
 
@@ -857,29 +857,29 @@ function ResponsesTab({ token, sessions, responses, reports, surveyReports, comp
     <div className="space-y-6">
       {/* Responses header */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          <span className="text-2xl font-bold text-foreground">{completedCount}</span>{" "}
+        <p className="text-sm text-gray-600">
+          <span className="text-2xl font-bold text-gray-900">{completedCount}</span>{" "}
           件の回答
         </p>
         <div className="relative" ref={menuRef}>
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="p-2 rounded-full hover:bg-muted transition-colors"
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
             aria-label="メニュー"
           >
-            <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="currentColor">
+            <svg className="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
               <circle cx="12" cy="5" r="1.5" />
               <circle cx="12" cy="12" r="1.5" />
               <circle cx="12" cy="19" r="1.5" />
             </svg>
           </button>
           {menuOpen && (
-            <div className="absolute right-0 top-full mt-1 w-56 bg-card rounded-lg shadow-lg border border py-1 z-50">
+            <div className="absolute right-0 top-full mt-1 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
               <button
                 type="button"
                 onClick={handleNotificationToggle}
-                className="w-full text-left px-4 py-2.5 text-sm text-foreground/80 hover:bg-muted flex items-center gap-2"
+                className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
               >
                 {notificationEmail ? (
                   <svg className="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -890,18 +890,18 @@ function ResponsesTab({ token, sessions, responses, reports, surveyReports, comp
                 )}
                 メール通知を受け取る
               </button>
-              <div className="border-t border my-1" />
+              <div className="border-t border-gray-100 my-1" />
               <button
                 type="button"
                 onClick={handleCSVDownload}
-                className="w-full text-left px-4 py-2.5 text-sm text-foreground/80 hover:bg-muted flex items-center gap-2"
+                className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
               >
-                <svg className="w-4 h-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                 </svg>
                 回答をダウンロード (.csv)
               </button>
-              <div className="border-t border my-1" />
+              <div className="border-t border-gray-100 my-1" />
               <button
                 type="button"
                 onClick={() => { setMenuOpen(false); setShowDeleteDialog(true); }}
@@ -918,10 +918,10 @@ function ResponsesTab({ token, sessions, responses, reports, surveyReports, comp
       </div>
 
       {/* Sub-tab bar */}
-      <div className="flex gap-1 bg-muted rounded-lg p-1">
+      <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
         {SUB_TABS.map((tab) => (
           <button key={tab.id} onClick={() => setSubTab(tab.id)}
-            className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${subTab === tab.id ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground/80"}`}>
+            className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${subTab === tab.id ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"}`}>
             {tab.label}
           </button>
         ))}
@@ -985,15 +985,15 @@ function SummarySubTab({ token, responses, sessions, surveyReports, onReportGene
       {/* Fixed question aggregations */}
       {fixedQuestions.length > 0 && questionGroups.size > 0 && (
         <div className="space-y-4">
-          <h3 className="text-sm font-medium text-foreground/80">固定質問の集計</h3>
+          <h3 className="text-sm font-medium text-gray-700">固定質問の集計</h3>
           {fixedQuestions.map((fq, idx) => {
             const group = questionGroups.get(fq.statement);
             if (!group || group.length === 0) return null;
             const qt = fq.question_type || "radio";
             return (
-              <div key={idx} className="bg-card rounded-xl border border p-4 space-y-3">
-                <p className="text-sm font-medium text-foreground">{fq.statement}</p>
-                <p className="text-xs text-muted-foreground">{group.length}件の回答</p>
+              <div key={idx} className="bg-white rounded-xl border border-gray-200 p-4 space-y-3">
+                <p className="text-sm font-medium text-gray-900">{fq.statement}</p>
+                <p className="text-xs text-gray-500">{group.length}件の回答</p>
                 {(qt === "radio" || qt === "dropdown") && (
                   <BarChartAggregation responses={group} options={fq.options} />
                 )}
@@ -1041,21 +1041,21 @@ function BarChartAggregation({ responses, options }: { responses: ResponseInfo[]
         const pct = total > 0 ? Math.round((count / total) * 100) : 0;
         return (
           <div key={i} className="flex items-center gap-3 text-sm">
-            <span className="w-32 text-foreground/80 truncate shrink-0" title={opt}>{opt}</span>
-            <div className="flex-1 bg-muted rounded-full h-5 overflow-hidden">
+            <span className="w-32 text-gray-700 truncate shrink-0" title={opt}>{opt}</span>
+            <div className="flex-1 bg-gray-100 rounded-full h-5 overflow-hidden">
               <div className="bg-blue-500 h-full rounded-full transition-all" style={{ width: `${pct}%` }} />
             </div>
-            <span className="text-xs text-muted-foreground w-16 text-right shrink-0">{count}件 ({pct}%)</span>
+            <span className="text-xs text-gray-500 w-16 text-right shrink-0">{count}件 ({pct}%)</span>
           </div>
         );
       })}
       {freeTextCount > 0 && (
         <div className="flex items-center gap-3 text-sm">
-          <span className="w-32 text-muted-foreground truncate shrink-0">その他</span>
-          <div className="flex-1 bg-muted rounded-full h-5 overflow-hidden">
-            <div className="bg-muted-foreground h-full rounded-full transition-all" style={{ width: `${total > 0 ? Math.round((freeTextCount / total) * 100) : 0}%` }} />
+          <span className="w-32 text-gray-500 truncate shrink-0">その他</span>
+          <div className="flex-1 bg-gray-100 rounded-full h-5 overflow-hidden">
+            <div className="bg-gray-400 h-full rounded-full transition-all" style={{ width: `${total > 0 ? Math.round((freeTextCount / total) * 100) : 0}%` }} />
           </div>
-          <span className="text-xs text-muted-foreground w-16 text-right shrink-0">{freeTextCount}件</span>
+          <span className="text-xs text-gray-500 w-16 text-right shrink-0">{freeTextCount}件</span>
         </div>
       )}
     </div>
@@ -1081,11 +1081,11 @@ function CheckboxAggregation({ responses, options }: { responses: ResponseInfo[]
         const pct = total > 0 ? Math.round((count / total) * 100) : 0;
         return (
           <div key={i} className="flex items-center gap-3 text-sm">
-            <span className="w-32 text-foreground/80 truncate shrink-0" title={opt}>{opt}</span>
-            <div className="flex-1 bg-muted rounded-full h-5 overflow-hidden">
+            <span className="w-32 text-gray-700 truncate shrink-0" title={opt}>{opt}</span>
+            <div className="flex-1 bg-gray-100 rounded-full h-5 overflow-hidden">
               <div className="bg-green-500 h-full rounded-full transition-all" style={{ width: `${pct}%` }} />
             </div>
-            <span className="text-xs text-muted-foreground w-16 text-right shrink-0">{count}件 ({pct}%)</span>
+            <span className="text-xs text-gray-500 w-16 text-right shrink-0">{count}件 ({pct}%)</span>
           </div>
         );
       })}
@@ -1110,11 +1110,11 @@ function ScaleAggregation({ responses, scaleConfig }: { responses: ResponseInfo[
   return (
     <div className="space-y-3">
       <div className="flex items-baseline gap-2">
-        <span className="text-2xl font-bold text-foreground">{avg.toFixed(1)}</span>
-        <span className="text-sm text-muted-foreground">/ {config.max} 平均</span>
+        <span className="text-2xl font-bold text-gray-900">{avg.toFixed(1)}</span>
+        <span className="text-sm text-gray-500">/ {config.max} 平均</span>
       </div>
       {config.minLabel && config.maxLabel && (
-        <div className="flex justify-between text-xs text-muted-foreground">
+        <div className="flex justify-between text-xs text-gray-400">
           <span>{config.minLabel}</span>
           <span>{config.maxLabel}</span>
         </div>
@@ -1125,11 +1125,11 @@ function ScaleAggregation({ responses, scaleConfig }: { responses: ResponseInfo[
           const pct = total > 0 ? Math.round((count / total) * 100) : 0;
           return (
             <div key={n} className="flex-1 text-center">
-              <div className="bg-muted rounded-t relative" style={{ height: "60px" }}>
+              <div className="bg-gray-100 rounded-t relative" style={{ height: "60px" }}>
                 <div className="absolute bottom-0 left-0 right-0 bg-purple-500 rounded-t transition-all" style={{ height: `${pct}%` }} />
               </div>
-              <p className="text-xs text-muted-foreground mt-1">{n}</p>
-              <p className="text-[10px] text-muted-foreground">{count}</p>
+              <p className="text-xs text-gray-600 mt-1">{n}</p>
+              <p className="text-[10px] text-gray-400">{count}</p>
             </div>
           );
         })}
@@ -1144,12 +1144,12 @@ function TextAnswersList({ responses }: { responses: ResponseInfo[] }) {
     .map((r) => r.answer_text || r.free_text)
     .filter((t): t is string => !!t && t.trim().length > 0);
 
-  if (texts.length === 0) return <p className="text-xs text-muted-foreground">テキスト回答なし</p>;
+  if (texts.length === 0) return <p className="text-xs text-gray-400">テキスト回答なし</p>;
 
   return (
     <div className="max-h-48 overflow-y-auto space-y-1.5">
       {texts.map((t, i) => (
-        <div key={i} className="text-sm text-foreground/80 bg-muted rounded-lg px-3 py-2">{t}</div>
+        <div key={i} className="text-sm text-gray-700 bg-gray-50 rounded-lg px-3 py-2">{t}</div>
       ))}
     </div>
   );
@@ -1162,8 +1162,8 @@ function IndividualSubTab({ sessions, responses, reports }: { sessions: SessionI
 
   if (sessions.length === 0) {
     return (
-      <div className="bg-card rounded-xl border border p-8 text-center">
-        <p className="text-sm text-muted-foreground">URLを共有して回答を集めましょう。</p>
+      <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
+        <p className="text-sm text-gray-500">URLを共有して回答を集めましょう。</p>
       </div>
     );
   }
@@ -1177,19 +1177,19 @@ function IndividualSubTab({ sessions, responses, reports }: { sessions: SessionI
       {/* Session selector */}
       <div className="flex items-center gap-2">
         <button type="button" disabled={selectedIdx <= 0} onClick={() => setSelectedIdx((p) => p - 1)}
-          className="p-2 rounded-lg border border hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+          className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
         <select value={selectedIdx} onChange={(e) => setSelectedIdx(Number(e.target.value))}
-          className="flex-1 px-3 py-2 border border-input rounded-lg text-sm bg-card">
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
           {sessions.map((s, i) => (
             <option key={s.id} value={i}>回答 #{i + 1} — {new Date(s.created_at).toLocaleString("ja-JP")}</option>
           ))}
         </select>
         <button type="button" disabled={selectedIdx >= sessions.length - 1} onClick={() => setSelectedIdx((p) => p + 1)}
-          className="p-2 rounded-lg border border hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+          className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
@@ -1197,20 +1197,20 @@ function IndividualSubTab({ sessions, responses, reports }: { sessions: SessionI
       </div>
 
       {/* Q&A list */}
-      <div className="bg-card rounded-xl border border p-4 space-y-3">
+      <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-foreground">回答 #{selectedIdx + 1}</p>
-          <p className="text-xs text-muted-foreground">{sr.length}問回答</p>
+          <p className="text-sm font-medium text-gray-900">回答 #{selectedIdx + 1}</p>
+          <p className="text-xs text-gray-500">{sr.length}問回答</p>
         </div>
         {sr.length > 0 ? (
           <div className="space-y-2">
             {sr.map((r, i) => (
-              <div key={i} className="text-sm border border rounded-lg p-3">
+              <div key={i} className="text-sm border border-gray-100 rounded-lg p-3">
                 <div className="flex items-start gap-2">
-                  <span className="text-xs text-muted-foreground shrink-0 mt-0.5">Q{r.question_index}</span>
+                  <span className="text-xs text-gray-400 shrink-0 mt-0.5">Q{r.question_index}</span>
                   <div className="min-w-0">
-                    <p className="text-muted-foreground text-xs mb-1">{r.statement}</p>
-                    <p className="text-foreground">{formatResponseText(r)}</p>
+                    <p className="text-gray-600 text-xs mb-1">{r.statement}</p>
+                    <p className="text-gray-900">{formatResponseText(r)}</p>
                   </div>
                   <span className={`text-[10px] px-1.5 py-0.5 rounded shrink-0 ${r.source === "fixed" ? "bg-blue-50 text-blue-600" : "bg-purple-50 text-purple-600"}`}>
                     {r.source === "fixed" ? "固定" : "AI"}
@@ -1220,7 +1220,7 @@ function IndividualSubTab({ sessions, responses, reports }: { sessions: SessionI
             ))}
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">回答データがありません</p>
+          <p className="text-sm text-gray-500">回答データがありません</p>
         )}
         {rpt && (
           <Link href={`/report/${session.id}`} className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800" target="_blank">
@@ -1275,8 +1275,8 @@ function SettingsEditTab({ reportTarget, setReportTarget, reportInstructions, se
 }) {
   return (
     <div className="max-w-2xl mx-auto">
-      <fieldset className="space-y-5 rounded-xl border border bg-muted/50 p-5">
-        <legend className="flex items-center gap-2 px-2 text-sm font-semibold text-muted-foreground">
+      <fieldset className="space-y-5 rounded-xl border border-gray-200 bg-gray-50/50 p-5">
+        <legend className="flex items-center gap-2 px-2 text-sm font-semibold text-gray-600">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 0 1 1.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.559.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.894.149c-.424.07-.764.383-.929.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 0 1-1.449.12l-.738-.527c-.35-.25-.806-.272-1.204-.107-.397.165-.71.505-.78.929l-.15.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 0 1-.12-1.45l.527-.737c.25-.35.272-.806.108-1.204-.165-.397-.506-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.108-1.204l-.526-.738a1.125 1.125 0 0 1 .12-1.45l.773-.773a1.125 1.125 0 0 1 1.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894Z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -1285,10 +1285,10 @@ function SettingsEditTab({ reportTarget, setReportTarget, reportInstructions, se
         </legend>
 
         <div>
-          <label htmlFor="edit-reportTarget" className="block text-sm font-medium text-foreground mb-1">質問数（レポート生成まで）</label>
-          <p className="text-xs text-muted-foreground mb-2">AIが自動生成する質問の数です。この数に達するとレポートが生成されます。</p>
+          <label htmlFor="edit-reportTarget" className="block text-sm font-medium text-gray-900 mb-1">質問数（レポート生成まで）</label>
+          <p className="text-xs text-gray-500 mb-2">AIが自動生成する質問の数です。この数に達するとレポートが生成されます。</p>
           <select id="edit-reportTarget" value={reportTarget} onChange={(e) => setReportTarget(Number(e.target.value))} onBlur={onBlur}
-            className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-card">
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white">
             {Array.from({ length: 19 }, (_, i) => (i + 1) * 5).map((n) => (
               <option key={n} value={n}>{n}問{n === 25 ? "（デフォルト）" : ""}</option>
             ))}
@@ -1296,13 +1296,13 @@ function SettingsEditTab({ reportTarget, setReportTarget, reportInstructions, se
         </div>
 
         <div>
-          <label htmlFor="edit-reportInstructions" className="block text-sm font-medium text-foreground mb-1">
-            レポートのカスタマイズ <span className="text-xs font-normal text-muted-foreground">任意</span>
+          <label htmlFor="edit-reportInstructions" className="block text-sm font-medium text-gray-900 mb-1">
+            レポートのカスタマイズ <span className="text-xs font-normal text-gray-500">任意</span>
           </label>
-          <p className="text-xs text-muted-foreground mb-2">回答完了後にAIが自動生成するレポートへの追加指示です。</p>
+          <p className="text-xs text-gray-500 mb-2">回答完了後にAIが自動生成するレポートへの追加指示です。</p>
           <textarea id="edit-reportInstructions" value={reportInstructions} onChange={(e) => setReportInstructions(e.target.value)} onBlur={onBlur}
             placeholder="例：賛否が分かれたポイントを重点的にまとめてほしい"
-            className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent resize-none bg-card" rows={3} />
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-white" rows={3} />
         </div>
       </fieldset>
     </div>
@@ -1344,9 +1344,9 @@ function ConfirmDeleteDialog({ count, deleting, onConfirm, onCancel }: {
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={onCancel}>
-      <div className="bg-card rounded-xl p-6 max-w-sm w-full mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-lg font-semibold text-foreground mb-2">すべての回答を削除</h3>
-        <p className="text-sm text-muted-foreground mb-1">
+      <div className="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">すべての回答を削除</h3>
+        <p className="text-sm text-gray-600 mb-1">
           {count}件の回答とレポートがすべて削除されます。
         </p>
         <p className="text-sm text-red-600 font-medium mb-6">
@@ -1354,7 +1354,7 @@ function ConfirmDeleteDialog({ count, deleting, onConfirm, onCancel }: {
         </p>
         <div className="flex gap-3 justify-end">
           <button type="button" onClick={onCancel} disabled={deleting}
-            className="px-4 py-2 text-sm text-foreground/80 bg-muted rounded-lg hover:bg-muted transition-colors disabled:opacity-50">
+            className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50">
             キャンセル
           </button>
           <button type="button" onClick={onConfirm} disabled={deleting}
@@ -1385,9 +1385,9 @@ function EmailNotificationDialog({ defaultEmail, onSave, onCancel }: {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={onCancel}>
-      <div className="bg-card rounded-xl p-6 max-w-sm w-full mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-lg font-semibold text-foreground mb-2">メール通知設定</h3>
-        <p className="text-sm text-muted-foreground mb-4">
+      <div className="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">メール通知設定</h3>
+        <p className="text-sm text-gray-600 mb-4">
           回答が完了するたびに通知メールを送信します。
         </p>
         <form onSubmit={handleSubmit}>
@@ -1396,13 +1396,13 @@ function EmailNotificationDialog({ defaultEmail, onSave, onCancel }: {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="email@example.com"
-            className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent text-sm mb-4"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm mb-4"
             required
             autoFocus
           />
           <div className="flex gap-3 justify-end">
             <button type="button" onClick={onCancel} disabled={saving}
-              className="px-4 py-2 text-sm text-foreground/80 bg-muted rounded-lg hover:bg-muted transition-colors disabled:opacity-50">
+              className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50">
               キャンセル
             </button>
             <button type="submit" disabled={saving || !email.trim()}
@@ -1427,7 +1427,7 @@ function CopyButton({ text, label }: { text: string; label?: string }) {
   if (label) {
     return (
       <button type="button" onClick={handleCopy}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground bg-card border border rounded-lg hover:bg-muted transition-colors">
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
         </svg>
@@ -1437,7 +1437,7 @@ function CopyButton({ text, label }: { text: string; label?: string }) {
   }
 
   return (
-    <button type="button" onClick={handleCopy} className="p-1.5 text-muted-foreground hover:text-muted-foreground transition-colors rounded shrink-0" title="URLをコピー">
+    <button type="button" onClick={handleCopy} className="p-1.5 text-gray-400 hover:text-gray-600 transition-colors rounded shrink-0" title="URLをコピー">
       {copied ? (
         <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

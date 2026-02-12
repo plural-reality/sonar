@@ -76,8 +76,8 @@ export function PresetSessionStarter({ preset }: PresetSessionStarterProps) {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-lg font-medium text-foreground">{preset.title}</h1>
-        <p className="text-sm text-muted-foreground mt-1">{preset.purpose}</p>
+        <h1 className="text-lg font-medium text-gray-900">{preset.title}</h1>
+        <p className="text-sm text-gray-600 mt-1">{preset.purpose}</p>
       </div>
       <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
         {error}

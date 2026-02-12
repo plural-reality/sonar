@@ -1,32 +1,4 @@
-"use client"
-
-import * as React from "react"
-import { Progress as ProgressPrimitive } from "radix-ui"
-
-import { cn } from "@/lib/utils"
-
-function ProgressBase({
-  className,
-  value,
-  ...props
-}: React.ComponentProps<typeof ProgressPrimitive.Root>) {
-  return (
-    <ProgressPrimitive.Root
-      data-slot="progress"
-      className={cn(
-        "bg-primary/20 relative h-2 w-full overflow-hidden rounded-full",
-        className
-      )}
-      {...props}
-    >
-      <ProgressPrimitive.Indicator
-        data-slot="progress-indicator"
-        className="bg-primary h-full w-full flex-1 transition-all"
-        style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-      />
-    </ProgressPrimitive.Root>
-  )
-}
+import { cn } from "@/lib/utils/cn";
 
 interface ProgressProps {
   current: number;
@@ -34,20 +6,23 @@ interface ProgressProps {
   className?: string;
 }
 
-function Progress({ current, total, className }: ProgressProps) {
+export function Progress({ current, total, className }: ProgressProps) {
   const percentage = Math.min((current / total) * 100, 100);
 
   return (
     <div className={cn("w-full", className)}>
-      <div className="flex justify-between text-sm text-muted-foreground mb-1">
+      <div className="flex justify-between text-sm text-gray-600 mb-1">
         <span>進捗</span>
         <span>
           {current} / {total}
         </span>
       </div>
-      <ProgressBase value={percentage} />
+      <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-blue-500 transition-all duration-300 ease-out"
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
     </div>
   );
 }
-
-export { Progress, ProgressBase }

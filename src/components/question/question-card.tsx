@@ -52,7 +52,7 @@ export function QuestionCard({
   // For fixed questions with non-radio types, use specialized renderers
   if (isFixedQuestion && qt !== "radio") {
     return (
-      <div className="bg-card rounded-xl border p-5 md:p-6 shadow-sm">
+      <div className="bg-white rounded-xl border border-gray-200 p-5 md:p-6 shadow-sm">
         <QuestionHeader statement={statement} detail={detail} required />
         <div className="space-y-3">
           {qt === "checkbox" && (
@@ -102,7 +102,7 @@ export function QuestionCard({
   };
 
   return (
-    <div className="bg-card rounded-xl border p-5 md:p-6 shadow-sm">
+    <div className="bg-white rounded-xl border border-gray-200 p-5 md:p-6 shadow-sm">
       <QuestionHeader statement={statement} detail={detail} required={isFixedQuestion} />
       <div className="space-y-3">
         {isFixedQuestion ? (
@@ -132,11 +132,11 @@ export function QuestionCard({
 function QuestionHeader({ statement, detail, required }: { statement: string; detail: string; required?: boolean }) {
   return (
     <div className="mb-5">
-      <h3 className="text-lg font-semibold text-foreground mb-2 leading-snug">
+      <h3 className="text-lg font-semibold text-gray-900 mb-2 leading-snug">
         {statement}
         {required && <span className="text-red-500 ml-1">*</span>}
       </h3>
-      <p className="text-muted-foreground text-sm leading-relaxed">{detail}</p>
+      <p className="text-gray-600 text-sm leading-relaxed">{detail}</p>
     </div>
   );
 }
@@ -159,14 +159,14 @@ function FixedRadioAnswer({ options, selectedOption, isLoading, onSelect }: {
             "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
             selectedOption === index
               ? "border-blue-500 bg-blue-50 text-blue-800 shadow-sm"
-              : "border text-foreground/80 hover:bg-muted hover:border-muted-foreground/30",
+              : "border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300",
             isLoading && "opacity-50 cursor-not-allowed"
           )}
         >
           <div className="flex items-center gap-3">
             <span className={cn(
               "flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
-              selectedOption === index ? "border-blue-500 bg-blue-500" : "border-input bg-card"
+              selectedOption === index ? "border-blue-500 bg-blue-500" : "border-gray-300 bg-white"
             )}>
               {selectedOption === index && (
                 <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -223,14 +223,14 @@ function CheckboxAnswer({ options, savedSelectedOptions, isLoading, onSubmit }: 
             "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
             selected.has(index)
               ? "border-blue-500 bg-blue-50 text-blue-800 shadow-sm"
-              : "border text-foreground/80 hover:bg-muted hover:border-muted-foreground/30",
+              : "border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300",
             isLoading && "opacity-50 cursor-not-allowed"
           )}
         >
           <div className="flex items-center gap-3">
             <span className={cn(
               "flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all",
-              selected.has(index) ? "border-blue-500 bg-blue-500" : "border-input bg-card"
+              selected.has(index) ? "border-blue-500 bg-blue-500" : "border-gray-300 bg-white"
             )}>
               {selected.has(index) && (
                 <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -275,9 +275,9 @@ function DropdownAnswer({ options, selectedOption, isLoading, onSelect }: {
       }}
       disabled={isLoading}
       className={cn(
-        "w-full px-4 py-3 rounded-xl border-2 bg-card text-sm transition-all duration-200",
+        "w-full px-4 py-3 rounded-xl border-2 bg-white text-sm transition-all duration-200",
         "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
-        selectedOption !== null ? "border-blue-500 text-blue-800" : "border text-foreground/80",
+        selectedOption !== null ? "border-blue-500 text-blue-800" : "border-gray-200 text-gray-700",
         isLoading && "opacity-50 cursor-not-allowed"
       )}
     >
@@ -319,9 +319,9 @@ function TextAnswer({ isTextarea, savedText, isLoading, onSubmit }: {
           rows={4}
           maxLength={5000}
           className={cn(
-            "w-full px-4 py-3 rounded-xl border-2 bg-card text-sm transition-all duration-200 resize-none",
+            "w-full px-4 py-3 rounded-xl border-2 bg-white text-sm transition-all duration-200 resize-none",
             "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
-            submitted ? "border-green-300" : "border",
+            submitted ? "border-green-300" : "border-gray-200",
             isLoading && "opacity-50 cursor-not-allowed"
           )}
           placeholder="回答を入力してください..."
@@ -334,16 +334,16 @@ function TextAnswer({ isTextarea, savedText, isLoading, onSubmit }: {
           disabled={isLoading}
           maxLength={1000}
           className={cn(
-            "w-full px-4 py-3 rounded-xl border-2 bg-card text-sm transition-all duration-200",
+            "w-full px-4 py-3 rounded-xl border-2 bg-white text-sm transition-all duration-200",
             "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
-            submitted ? "border-green-300" : "border",
+            submitted ? "border-green-300" : "border-gray-200",
             isLoading && "opacity-50 cursor-not-allowed"
           )}
           placeholder="回答を入力してください..."
         />
       )}
       <div className="flex items-center justify-between">
-        <span className="text-xs text-muted-foreground">{text.length}/{isTextarea ? 5000 : 1000}文字</span>
+        <span className="text-xs text-gray-500">{text.length}/{isTextarea ? 5000 : 1000}文字</span>
         <button
           type="button"
           onClick={handleSubmit}
@@ -377,7 +377,7 @@ function ScaleAnswer({ scaleConfig, selectedOption, isLoading, onSelect }: {
     <div className="space-y-2">
       <div className="flex items-center justify-between gap-1">
         {scaleConfig?.minLabel && (
-          <span className="text-xs text-muted-foreground shrink-0 mr-2">{scaleConfig.minLabel}</span>
+          <span className="text-xs text-gray-500 shrink-0 mr-2">{scaleConfig.minLabel}</span>
         )}
         <div className="flex-1 flex items-center justify-center gap-1.5">
           {values.map((val) => (
@@ -390,7 +390,7 @@ function ScaleAnswer({ scaleConfig, selectedOption, isLoading, onSelect }: {
                 "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
                 selectedOption === val
                   ? "border-blue-500 bg-blue-500 text-white shadow-sm"
-                  : "border-input bg-card text-foreground/80 hover:bg-muted hover:border-border",
+                  : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400",
                 isLoading && "opacity-50 cursor-not-allowed"
               )}
             >
@@ -399,7 +399,7 @@ function ScaleAnswer({ scaleConfig, selectedOption, isLoading, onSelect }: {
           ))}
         </div>
         {scaleConfig?.maxLabel && (
-          <span className="text-xs text-muted-foreground shrink-0 ml-2">{scaleConfig.maxLabel}</span>
+          <span className="text-xs text-gray-500 shrink-0 ml-2">{scaleConfig.maxLabel}</span>
         )}
       </div>
     </div>
@@ -467,10 +467,10 @@ function AIQuestionAnswer({
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
         <button onClick={() => handleMainSelect("yes")} disabled={isLoading}
           className={cn("flex-1 py-3 px-4 rounded-xl font-medium text-sm transition-all duration-200 border-2 focus:outline-none focus:ring-2 focus:ring-offset-2",
-            mainAnswer === "yes" ? "bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm focus:ring-emerald-500" : "bg-card border text-muted-foreground hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-600 focus:ring-emerald-500",
+            mainAnswer === "yes" ? "bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm focus:ring-emerald-500" : "bg-white border-gray-200 text-gray-600 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-600 focus:ring-emerald-500",
             isLoading && "opacity-50 cursor-not-allowed")}>
           <div className="flex items-center justify-center gap-1.5 sm:gap-2">
-            <svg className={cn("w-4 h-4 sm:w-5 sm:h-5 transition-colors", mainAnswer === "yes" ? "text-emerald-500" : "text-muted-foreground")} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className={cn("w-4 h-4 sm:w-5 sm:h-5 transition-colors", mainAnswer === "yes" ? "text-emerald-500" : "text-gray-400")} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
             <span>はい</span>
@@ -478,10 +478,10 @@ function AIQuestionAnswer({
         </button>
         <button onClick={() => handleMainSelect("unknown")} disabled={isLoading}
           className={cn("flex-1 py-3 px-4 rounded-xl font-medium text-sm transition-all duration-200 border-2 focus:outline-none focus:ring-2 focus:ring-offset-2",
-            mainAnswer === "unknown" ? "bg-amber-50 border-amber-500 text-amber-700 shadow-sm focus:ring-amber-500" : "bg-card border text-muted-foreground hover:bg-amber-50 hover:border-amber-300 hover:text-amber-600 focus:ring-amber-500",
+            mainAnswer === "unknown" ? "bg-amber-50 border-amber-500 text-amber-700 shadow-sm focus:ring-amber-500" : "bg-white border-gray-200 text-gray-600 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-600 focus:ring-amber-500",
             isLoading && "opacity-50 cursor-not-allowed")}>
           <div className="flex items-center justify-center gap-1.5 sm:gap-2">
-            <svg className={cn("w-4 h-4 sm:w-5 sm:h-5 transition-colors", mainAnswer === "unknown" ? "text-amber-500" : "text-muted-foreground")} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className={cn("w-4 h-4 sm:w-5 sm:h-5 transition-colors", mainAnswer === "unknown" ? "text-amber-500" : "text-gray-400")} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>わからない</span>
@@ -489,10 +489,10 @@ function AIQuestionAnswer({
         </button>
         <button onClick={() => handleMainSelect("no")} disabled={isLoading}
           className={cn("flex-1 py-3 px-4 rounded-xl font-medium text-sm transition-all duration-200 border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500",
-            mainAnswer === "no" ? "bg-rose-50 border-rose-500 text-rose-700 shadow-sm" : "bg-card border text-muted-foreground hover:bg-rose-50 hover:border-rose-300 hover:text-rose-600",
+            mainAnswer === "no" ? "bg-rose-50 border-rose-500 text-rose-700 shadow-sm" : "bg-white border-gray-200 text-gray-600 hover:bg-rose-50 hover:border-rose-300 hover:text-rose-600",
             isLoading && "opacity-50 cursor-not-allowed")}>
           <div className="flex items-center justify-center gap-1.5 sm:gap-2">
-            <svg className={cn("w-4 h-4 sm:w-5 sm:h-5 transition-colors", mainAnswer === "no" ? "text-rose-500" : "text-muted-foreground")} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className={cn("w-4 h-4 sm:w-5 sm:h-5 transition-colors", mainAnswer === "no" ? "text-rose-500" : "text-gray-400")} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
             <span>いいえ</span>
@@ -502,10 +502,10 @@ function AIQuestionAnswer({
 
       <button onClick={() => handleMainSelect("neither")} disabled={isLoading}
         className={cn("w-full py-2.5 px-4 rounded-xl font-medium text-sm transition-all duration-200 border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500",
-          isNeitherPending ? "bg-slate-50/50 border-slate-300 border-dashed text-slate-600" : mainAnswer === "neither" ? "bg-slate-100 border-slate-400 text-slate-700 shadow-sm" : "bg-card border text-muted-foreground hover:bg-slate-50 hover:border-slate-300 hover:text-slate-600",
+          isNeitherPending ? "bg-slate-50/50 border-slate-300 border-dashed text-slate-600" : mainAnswer === "neither" ? "bg-slate-100 border-slate-400 text-slate-700 shadow-sm" : "bg-white border-gray-200 text-gray-500 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-600",
           isLoading && "opacity-50 cursor-not-allowed")}>
         <div className="flex items-center justify-center gap-1.5 sm:gap-2">
-          <svg className={cn("w-4 h-4 sm:w-5 sm:h-5 transition-colors", isNeitherPending || mainAnswer === "neither" ? "text-slate-500" : "text-muted-foreground")} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className={cn("w-4 h-4 sm:w-5 sm:h-5 transition-colors", isNeitherPending || mainAnswer === "neither" ? "text-slate-500" : "text-gray-400")} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span>どちらでもない</span>
@@ -525,15 +525,15 @@ function AIQuestionAnswer({
               <span>以下から1つ選択して回答を完了してください</span>
             </div>
           )}
-          <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-3">その他の立場を選択</p>
+          <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-3">その他の立場を選択</p>
           {options.slice(3, 6).map((option, index) => (
             <button key={index} onClick={() => handleSubOptionSelect(index)} disabled={isLoading}
               className={cn("w-full text-left px-4 py-3 rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2",
-                selectedOption === index + 3 ? "border-slate-400 bg-slate-50 text-slate-800" : "border text-foreground/80 hover:bg-muted hover:border-muted-foreground/30",
+                selectedOption === index + 3 ? "border-slate-400 bg-slate-50 text-slate-800" : "border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300",
                 isLoading && "opacity-50 cursor-not-allowed")}>
               <div className="flex items-center gap-3">
                 <span className={cn("flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
-                  selectedOption === index + 3 ? "border-slate-500 bg-slate-500" : "border-input bg-card")}>
+                  selectedOption === index + 3 ? "border-slate-500 bg-slate-500" : "border-gray-300 bg-white")}>
                   {selectedOption === index + 3 && (
                     <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -545,17 +545,17 @@ function AIQuestionAnswer({
             </button>
           ))}
 
-          <div className="mt-4 pt-4 border-t border">
-            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-3">または自由記述で回答</p>
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-3">または自由記述で回答</p>
             <div className={cn("rounded-lg border-2 p-4 transition-all duration-200",
-              selectedOption === FREE_TEXT_OPTION_INDEX ? "border-violet-400 bg-violet-50/50" : "border bg-muted/50")}>
+              selectedOption === FREE_TEXT_OPTION_INDEX ? "border-violet-400 bg-violet-50/50" : "border-gray-200 bg-gray-50/50")}>
               <textarea value={draftText} onChange={(event) => setDraftText(event.target.value)} disabled={isLoading}
                 rows={3} maxLength={1000}
-                className={cn("w-full rounded-md border bg-card px-3 py-2 text-sm text-foreground/80 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500",
+                className={cn("w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500",
                   isLoading && "opacity-50 cursor-not-allowed")}
                 placeholder="選択肢にあてはまらない場合、立場を自由に記述してください" />
               <div className="mt-3 flex items-center justify-between gap-3">
-                <span className="text-xs text-muted-foreground">{draftText.length}/1000文字</span>
+                <span className="text-xs text-gray-500">{draftText.length}/1000文字</span>
                 <button type="button" onClick={handleOtherSubmit}
                   disabled={isLoading || draftText.trim().length === 0}
                   className={cn("px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-violet-500 text-white hover:bg-violet-600",

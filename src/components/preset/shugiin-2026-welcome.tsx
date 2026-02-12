@@ -111,12 +111,12 @@ export function Shugiin2026Welcome() {
       : "準備中...";
 
   return (
-    <main className="min-h-screen bg-card">
+    <main className="min-h-screen bg-white">
       <div className="max-w-md mx-auto px-6 py-12 md:py-20">
         {/* タイトル */}
         <header className="mb-8">
-          <p className="text-sm text-muted-foreground/70 mb-3">2026年 衆議院選挙</p>
-          <h1 className="text-2xl font-semibold text-foreground tracking-tight leading-snug">
+          <p className="text-sm text-gray-400 mb-3">2026年 衆議院選挙</p>
+          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight leading-snug">
             あなたの考えに近い
             <br />
             政党を見つける
@@ -124,14 +124,14 @@ export function Shugiin2026Welcome() {
         </header>
 
         {/* 基本説明 */}
-        <p className="text-muted-foreground mb-10">
+        <p className="text-gray-600 mb-10">
           政策に関する質問に「はい」「いいえ」などで回答すると、
           各政党のマニフェストと照らし合わせて、相性の良い政党を提案します。
         </p>
 
         {/* AI動的生成の説明 */}
-        <section className="mb-10 py-6 border-y border-border/50">
-          <p className="text-sm text-muted-foreground/70 mb-4">このボートマッチの特徴</p>
+        <section className="mb-10 py-6 border-y border-gray-100">
+          <p className="text-sm text-gray-400 mb-4">このボートマッチの特徴</p>
 
           <img
             src="/images/votematch-hero.png"
@@ -139,10 +139,10 @@ export function Shugiin2026Welcome() {
             className="rounded-lg mb-5 w-full"
           />
 
-          <h2 className="font-medium text-foreground mb-3">
+          <h2 className="font-medium text-gray-900 mb-3">
             AIがあなたの回答を見ながら、次の質問を考えます
           </h2>
-          <p className="text-muted-foreground text-sm leading-relaxed">
+          <p className="text-gray-600 text-sm leading-relaxed">
             一般的なボートマッチは全員に同じ質問をしますが、
             ここではAIがあなたの回答パターンを分析しながら、
             より深掘りすべきテーマや、まだ聞けていない観点を見つけて質問を作ります。
@@ -152,7 +152,7 @@ export function Shugiin2026Welcome() {
 
         {/* 政党 */}
         <section className="mb-10">
-          <p className="text-sm text-muted-foreground/70 mb-3">比較対象の10政党</p>
+          <p className="text-sm text-gray-400 mb-3">比較対象の10政党</p>
           <div className="flex flex-wrap gap-1.5 mb-3">
             {PARTIES.map((party) => (
               <span
@@ -168,15 +168,15 @@ export function Shugiin2026Welcome() {
               </span>
             ))}
           </div>
-          <p className="text-xs text-muted-foreground/70">
+          <p className="text-xs text-gray-400">
             各政党の2026年マニフェスト・政策集に基づいて比較
           </p>
         </section>
 
         {/* 結果について */}
         <section className="mb-10">
-          <p className="text-sm text-muted-foreground/70 mb-2">診断結果</p>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-sm text-gray-400 mb-2">診断結果</p>
+          <p className="text-gray-600 text-sm">
             回答が終わると、あなたの価値観の傾向と、
             相性の良い政党をレポートにまとめます。
             なぜその政党と相性が良いのか、具体的な政策を引用しながら解説します。
@@ -187,12 +187,12 @@ export function Shugiin2026Welcome() {
         <section className="mb-10">
           <div className="flex gap-8 text-sm">
             <div>
-              <p className="text-muted-foreground/70 mb-1">所要時間</p>
-              <p className="text-foreground/80">約10分</p>
+              <p className="text-gray-400 mb-1">所要時間</p>
+              <p className="text-gray-700">約10分</p>
             </div>
             <div>
-              <p className="text-muted-foreground/70 mb-1">質問数</p>
-              <p className="text-foreground/80">{reportTarget}問</p>
+              <p className="text-gray-400 mb-1">質問数</p>
+              <p className="text-gray-700">{reportTarget}問</p>
             </div>
           </div>
         </section>
@@ -204,19 +204,19 @@ export function Shugiin2026Welcome() {
           <button
             onClick={handleStart}
             disabled={!isReady || isNavigating}
-            className="w-full py-3.5 bg-foreground text-white text-sm font-medium rounded-lg hover:bg-foreground/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-3.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {buttonText}
           </button>
 
-          <p className="text-xs text-muted-foreground/70 text-center mt-4">
+          <p className="text-xs text-gray-400 text-center mt-4">
             回答データは個人を特定しない形式で保存されます
           </p>
         </section>
 
         {/* ベータ版 disclaimer */}
-        <section className="mt-8 p-4 bg-muted rounded-lg">
-          <p className="text-xs text-muted-foreground leading-relaxed">
+        <section className="mt-8 p-4 bg-gray-50 rounded-lg">
+          <p className="text-xs text-gray-500 leading-relaxed">
             本サービスは技術検証が目的のベータ版です。中立性に配慮して作成しておりますが、分析結果の正確性を保証するものではありません。
             ご意見・ご指摘は
             <a
@@ -227,7 +227,7 @@ export function Shugiin2026Welcome() {
             </a>
             までお寄せください。
           </p>
-          <p className="text-xs text-muted-foreground mt-2">
+          <p className="text-xs text-gray-500 mt-2">
             <a
               href="https://github.com/blu3mo/sonar-b"
               target="_blank"

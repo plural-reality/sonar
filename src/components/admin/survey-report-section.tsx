@@ -120,14 +120,14 @@ export function SurveyReportSection({
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-foreground mb-4">
+      <h2 className="text-lg font-semibold text-gray-900 mb-4">
         全体レポート
       </h2>
 
       {/* Generate controls */}
-      <div className="bg-card rounded-xl border p-4 mb-4">
+      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4">
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-gray-600">
             全参加者の回答をもとに、アンケート全体の傾向を分析するレポートを生成します。
           </p>
 
@@ -135,7 +135,7 @@ export function SurveyReportSection({
             value={customInstructions}
             onChange={(e) => setCustomInstructions(e.target.value)}
             placeholder="追加の指示（任意）: 年代別の傾向にも注目してほしい、特定のテーマについて深掘りしてほしい..."
-            className="w-full px-3 py-1.5 border border-input rounded-lg text-sm text-foreground/80 placeholder:text-muted-foreground resize-y min-h-[56px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 placeholder:text-gray-400 resize-y min-h-[56px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
 
           <div className="flex items-center gap-2">
@@ -162,8 +162,8 @@ export function SurveyReportSection({
 
       {/* Report list */}
       {surveyReports.length === 0 ? (
-        <div className="bg-card rounded-xl border p-8 text-center">
-          <p className="text-sm text-muted-foreground">
+        <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
+          <p className="text-sm text-gray-500">
             まだ全体レポートがありません。上のボタンからレポートを生成してください。
           </p>
         </div>
@@ -175,25 +175,25 @@ export function SurveyReportSection({
             return (
               <div
                 key={report.id}
-                className="bg-card rounded-xl border overflow-hidden"
+                className="bg-white rounded-xl border border-gray-200 overflow-hidden"
               >
                 <button
                   onClick={() =>
                     setExpandedReportId(isExpanded ? null : report.id)
                   }
                   disabled={report.status === "generating"}
-                  className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-muted transition-colors disabled:cursor-default"
+                  className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-gray-50 transition-colors disabled:cursor-default"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <ReportStatusBadge status={report.status} />
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-foreground">
+                      <p className="text-sm font-medium text-gray-900">
                         バージョン {report.version}
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-gray-500">
                         {new Date(report.created_at).toLocaleString("ja-JP")}
                         {report.custom_instructions && (
-                          <span className="ml-2 text-muted-foreground">
+                          <span className="ml-2 text-gray-400">
                             指示あり
                           </span>
                         )}
@@ -202,7 +202,7 @@ export function SurveyReportSection({
                   </div>
                   {report.status !== "generating" && (
                     <svg
-                      className={`w-4 h-4 text-muted-foreground transition-transform ${
+                      className={`w-4 h-4 text-gray-400 transition-transform ${
                         isExpanded ? "rotate-180" : ""
                       }`}
                       fill="none"
@@ -220,13 +220,13 @@ export function SurveyReportSection({
                 </button>
 
                 {isExpanded && report.status === "completed" && (
-                  <div className="border-t border px-4 py-6">
+                  <div className="border-t border-gray-100 px-4 py-6">
                     {report.custom_instructions && (
-                      <div className="mb-4 p-3 bg-muted rounded-lg">
-                        <p className="text-xs font-medium text-muted-foreground mb-1">
+                      <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                        <p className="text-xs font-medium text-gray-500 mb-1">
                           生成時の指示
                         </p>
-                        <p className="text-sm text-foreground/80">
+                        <p className="text-sm text-gray-700">
                           {report.custom_instructions}
                         </p>
                       </div>
@@ -239,7 +239,7 @@ export function SurveyReportSection({
                 )}
 
                 {isExpanded && report.status === "failed" && (
-                  <div className="border-t border px-4 py-4">
+                  <div className="border-t border-gray-100 px-4 py-4">
                     <p className="text-sm text-red-600">
                       レポートの生成に失敗しました。再度お試しください。
                     </p>

@@ -372,7 +372,7 @@ export function QuestionFlow({
   return (
     <div className="space-y-6">
       {/* Fixed progress header */}
-      <div className="sticky top-0 bg-muted py-4 z-10 border-b border -mx-4 px-4">
+      <div className="sticky top-0 bg-gray-50 py-4 z-10 border-b border-gray-200 -mx-4 px-4">
         <Progress current={answeredCount} total={progressTotal} />
         {answeredCount >= reportTarget && !isFinishing && (
           <div className="mt-3 text-center">
@@ -403,7 +403,7 @@ export function QuestionFlow({
             <button
               onClick={generateReport}
               disabled={isGeneratingReport}
-              className="w-full sm:w-auto px-4 py-2 sm:py-1.5 text-sm border border-input text-muted-foreground rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
+              className="w-full sm:w-auto px-4 py-2 sm:py-1.5 text-sm border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
             >
               {isGeneratingReport
                 ? "レポートを生成中..."
@@ -425,14 +425,14 @@ export function QuestionFlow({
                     {hasFixedQuestions && blockIndex === 0 && qIdx === 0 && question.source === "fixed" && (
                       <div className="relative py-4">
                         <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                          <div className="w-full border-t-2 border" />
+                          <div className="w-full border-t-2 border-gray-200" />
                         </div>
                         <div className="relative flex justify-start">
-                          <div className="bg-muted pr-4">
-                            <p className="text-sm font-semibold text-muted-foreground">
+                          <div className="bg-gray-50 pr-4">
+                            <p className="text-sm font-semibold text-gray-600">
                               共通質問
                             </p>
-                            <p className="text-xs text-muted-foreground mt-0.5">
+                            <p className="text-xs text-gray-400 mt-0.5">
                               全員に同じ質問をしています
                             </p>
                           </div>
@@ -443,14 +443,14 @@ export function QuestionFlow({
                     {question.question_index === firstAiQuestionIndex && (
                       <div className="relative py-4">
                         <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                          <div className="w-full border-t-2 border" />
+                          <div className="w-full border-t-2 border-gray-200" />
                         </div>
                         <div className="relative flex justify-start">
-                          <div className="bg-muted pr-4">
-                            <p className="text-sm font-semibold text-muted-foreground">
+                          <div className="bg-gray-50 pr-4">
+                            <p className="text-sm font-semibold text-gray-600">
                               AIによる深掘り質問
                             </p>
-                            <p className="text-xs text-muted-foreground mt-0.5">
+                            <p className="text-xs text-gray-400 mt-0.5">
                               あなたの回答をもとに質問を生成しています
                             </p>
                           </div>
@@ -519,7 +519,7 @@ export function QuestionFlow({
                 <div className="text-2xl font-bold text-blue-800 mb-2">
                   {answeredCount}問の回答が完了しました
                 </div>
-                <p className="text-muted-foreground mb-5">
+                <p className="text-gray-600 mb-5">
                   十分なデータが集まりました。結果を確認できます。
                 </p>
                 {isFinishing ? (
@@ -546,7 +546,7 @@ export function QuestionFlow({
                           const nextEnd = answeredCount + BATCH_SIZE;
                           generateNextBatch(nextStart, nextEnd);
                         }}
-                        className="text-sm text-muted-foreground hover:text-blue-600 transition-colors underline underline-offset-2"
+                        className="text-sm text-gray-500 hover:text-blue-600 transition-colors underline underline-offset-2"
                       >
                         もっと深掘りする（さらに5問追加）
                       </button>
@@ -576,7 +576,7 @@ export function QuestionFlow({
         <div className="mt-6 flex justify-center">
           <button
             onClick={scrollToUnanswered}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-card border border-input text-muted-foreground rounded-lg hover:bg-muted transition-colors text-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors text-sm"
           >
             <svg
               className="w-4 h-4"
@@ -605,17 +605,17 @@ export function QuestionFlow({
           />
           <div className="relative w-full max-w-3xl mx-4 my-8 sm:my-12">
             {/* Modal card */}
-            <div className="bg-card rounded-2xl border shadow-xl overflow-hidden">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-xl overflow-hidden">
               {/* Modal header */}
-              <div className="px-6 py-4 border-b border">
+              <div className="px-6 py-4 border-b border-gray-100">
                 <div className="flex items-center justify-between mb-2">
                   <div>
-                    <h2 className="text-lg font-bold text-foreground">診断レポート</h2>
-                    <p className="text-xs text-muted-foreground">バージョン {report.version}</p>
+                    <h2 className="text-lg font-bold text-gray-900">診断レポート</h2>
+                    <p className="text-xs text-gray-500">バージョン {report.version}</p>
                   </div>
                   <button
                     onClick={() => setShowReportModal(false)}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground/80 hover:bg-muted transition-colors"
+                    className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -624,7 +624,7 @@ export function QuestionFlow({
                 </div>
                 {/* Session purpose */}
                 {session?.purpose && (
-                  <p className="text-sm text-muted-foreground mb-3">
+                  <p className="text-sm text-gray-600 mb-3">
                     {session.title ? `${session.title} — ` : ""}{session.purpose}
                   </p>
                 )}
@@ -634,7 +634,7 @@ export function QuestionFlow({
                     href={`/report/${sessionId}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 border rounded-lg text-xs text-muted-foreground hover:bg-muted transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50 transition-colors"
                   >
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -643,7 +643,7 @@ export function QuestionFlow({
                   </a>
                   <button
                     onClick={handleCopyReportUrl}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 border rounded-lg text-xs text-muted-foreground hover:bg-muted transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50 transition-colors"
                   >
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
@@ -652,7 +652,7 @@ export function QuestionFlow({
                   </button>
                   <button
                     onClick={handleCopyMarkdown}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 border rounded-lg text-xs text-muted-foreground hover:bg-muted transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50 transition-colors"
                   >
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
@@ -664,15 +664,15 @@ export function QuestionFlow({
 
               {/* Report content */}
               <div className="p-6 md:p-8">
-                <div className="flex items-center gap-3 mb-6 pb-4 border-b border">
+                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
                   <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 shadow-sm">
                     <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
                   </div>
-                  <h3 className="text-base font-bold text-foreground">AIレポート</h3>
+                  <h3 className="text-base font-bold text-gray-900">AIレポート</h3>
                 </div>
-                <div className="prose prose-blue max-w-none prose-headings:text-foreground prose-p:text-foreground/80 prose-li:text-foreground/80">
+                <div className="prose prose-blue max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700">
                   <ReactMarkdown
                     components={{
                       p: ({ node, children, ...props }) => (
@@ -701,7 +701,7 @@ export function QuestionFlow({
               </div>
 
               {/* Modal footer */}
-              <div className="px-6 py-4 border-t border bg-muted flex justify-end">
+              <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end">
                 <button
                   onClick={() => setShowReportModal(false)}
                   className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"

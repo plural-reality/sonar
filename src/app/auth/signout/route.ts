@@ -5,6 +5,6 @@ export async function POST(request: Request) {
   const supabase = await createClient();
   await supabase.auth.signOut();
 
-  const redirectTo = new URL("/login", request.url);
+  const redirectTo = new URL("/", request.url);
   return NextResponse.redirect(redirectTo, { status: 302 });
 }

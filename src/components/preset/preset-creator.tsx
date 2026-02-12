@@ -330,27 +330,27 @@ export function PresetCreator() {
               />
             </svg>
           </div>
-          <h2 className="text-lg font-semibold text-foreground">
+          <h2 className="text-lg font-semibold text-gray-900">
             アンケートを作成しました
           </h2>
         </div>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-foreground/80 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               回答用URL（共有用）
             </label>
-            <p className="text-xs text-muted-foreground mb-2">
+            <p className="text-xs text-gray-600 mb-2">
               このURLを回答者に共有してください
             </p>
             <CopyableUrl url={surveyUrl} />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground/80 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               管理画面URL
             </label>
-            <p className="text-xs text-muted-foreground mb-2">
+            <p className="text-xs text-gray-600 mb-2">
               回答一覧を確認できます。このURLは管理者のみに共有してください。
             </p>
             <CopyableUrl url={adminUrl} />
@@ -388,7 +388,7 @@ export function PresetCreator() {
         <div>
           <label
             htmlFor="title"
-            className="block text-sm font-medium text-foreground mb-1"
+            className="block text-sm font-medium text-gray-900 mb-1"
           >
             タイトル <span className="text-red-500">*</span>
           </label>
@@ -398,7 +398,7 @@ export function PresetCreator() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="例：新サービスのコンセプトについて"
-            className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-card"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
             required
           />
         </div>
@@ -407,10 +407,10 @@ export function PresetCreator() {
           <div className="flex items-center justify-between mb-1">
             <label
               htmlFor="background"
-              className="block text-sm font-medium text-foreground"
+              className="block text-sm font-medium text-gray-900"
             >
               説明文{" "}
-              <span className="text-xs font-normal text-muted-foreground">任意</span>
+              <span className="text-xs font-normal text-gray-500">任意</span>
             </label>
             <button
               type="button"
@@ -429,7 +429,7 @@ export function PresetCreator() {
             value={backgroundText}
             onChange={(e) => setBackgroundText(e.target.value)}
             placeholder="例：サービスの概要、ターゲットユーザー、競合との違いなど"
-            className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none bg-card"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none bg-white"
             rows={4}
           />
         </div>
@@ -469,10 +469,10 @@ export function PresetCreator() {
           return (
           <div
             key={qIndex}
-            className="bg-card rounded-lg border p-4 space-y-3"
+            className="bg-white rounded-lg border border-gray-200 p-4 space-y-3"
           >
             <div className="flex items-start justify-between gap-2">
-              <span className="text-xs text-muted-foreground mt-2 shrink-0">
+              <span className="text-xs text-gray-400 mt-2 shrink-0">
                 Q{qIndex + 1}
               </span>
               <div className="flex-1 space-y-2">
@@ -483,7 +483,7 @@ export function PresetCreator() {
                     updateFixedQuestion(qIndex, "statement", e.target.value)
                   }
                   placeholder="質問文を入力..."
-                  className="w-full px-3 py-2 border-b-2 border focus:border-blue-500 focus:outline-none text-sm bg-transparent"
+                  className="w-full px-3 py-2 border-b-2 border-gray-200 focus:border-blue-500 focus:outline-none text-sm bg-transparent"
                 />
                 <input
                   type="text"
@@ -492,13 +492,13 @@ export function PresetCreator() {
                     updateFixedQuestion(qIndex, "detail", e.target.value)
                   }
                   placeholder="補足説明（任意）"
-                  className="w-full px-3 py-1.5 text-xs text-muted-foreground border-b border focus:border-blue-300 focus:outline-none bg-transparent"
+                  className="w-full px-3 py-1.5 text-xs text-gray-500 border-b border-gray-100 focus:border-blue-300 focus:outline-none bg-transparent"
                 />
               </div>
               <select
                 value={qType}
                 onChange={(e) => updateFixedQuestionType(qIndex, e.target.value as QuestionType)}
-                className="text-xs border rounded px-2 py-1 bg-card shrink-0 mt-1"
+                className="text-xs border border-gray-200 rounded px-2 py-1 bg-white shrink-0 mt-1"
               >
                 <option value="radio">ラジオボタン</option>
                 <option value="checkbox">チェックボックス</option>
@@ -510,7 +510,7 @@ export function PresetCreator() {
               <button
                 type="button"
                 onClick={() => removeFixedQuestion(qIndex)}
-                className="text-muted-foreground hover:text-red-500 transition-colors shrink-0 mt-1"
+                className="text-gray-300 hover:text-red-500 transition-colors shrink-0 mt-1"
                 title="質問を削除"
               >
                 <svg
@@ -531,14 +531,14 @@ export function PresetCreator() {
 
             {/* Scale config */}
             {qType === 'scale' && (
-              <div className="pl-7 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+              <div className="pl-7 flex flex-wrap items-center gap-3 text-xs text-gray-600">
                 <label className="flex items-center gap-1">
                   最小
                   <input
                     type="number"
                     value={q.scale_config?.min ?? 1}
                     onChange={(e) => updateScaleConfig(qIndex, 'min', e.target.value)}
-                    className="w-14 px-2 py-1 border rounded text-center"
+                    className="w-14 px-2 py-1 border border-gray-200 rounded text-center"
                   />
                 </label>
                 <label className="flex items-center gap-1">
@@ -547,7 +547,7 @@ export function PresetCreator() {
                     type="number"
                     value={q.scale_config?.max ?? 5}
                     onChange={(e) => updateScaleConfig(qIndex, 'max', e.target.value)}
-                    className="w-14 px-2 py-1 border rounded text-center"
+                    className="w-14 px-2 py-1 border border-gray-200 rounded text-center"
                   />
                 </label>
                 <label className="flex items-center gap-1">
@@ -557,7 +557,7 @@ export function PresetCreator() {
                     value={q.scale_config?.minLabel ?? ''}
                     onChange={(e) => updateScaleConfig(qIndex, 'minLabel', e.target.value)}
                     placeholder="例: 全く思わない"
-                    className="w-28 px-2 py-1 border rounded"
+                    className="w-28 px-2 py-1 border border-gray-200 rounded"
                   />
                 </label>
                 <label className="flex items-center gap-1">
@@ -567,7 +567,7 @@ export function PresetCreator() {
                     value={q.scale_config?.maxLabel ?? ''}
                     onChange={(e) => updateScaleConfig(qIndex, 'maxLabel', e.target.value)}
                     placeholder="例: 強く思う"
-                    className="w-28 px-2 py-1 border rounded"
+                    className="w-28 px-2 py-1 border border-gray-200 rounded"
                   />
                 </label>
               </div>
@@ -575,7 +575,7 @@ export function PresetCreator() {
 
             {/* Text/textarea preview */}
             {(qType === 'text' || qType === 'textarea') && (
-              <div className="pl-7 text-xs text-muted-foreground italic py-2">
+              <div className="pl-7 text-xs text-gray-400 italic py-2">
                 {qType === 'text' ? '回答者が短文テキストを入力します' : '回答者が段落テキストを入力します'}
               </div>
             )}
@@ -586,9 +586,9 @@ export function PresetCreator() {
               {q.options.map((option, oIndex) => (
                 <div key={oIndex} className="flex items-center gap-2">
                   {qType === 'checkbox' ? (
-                    <span className="w-4 h-4 rounded border-2 border-input shrink-0" />
+                    <span className="w-4 h-4 rounded border-2 border-gray-300 shrink-0" />
                   ) : (
-                    <span className="w-4 h-4 rounded-full border-2 border-input shrink-0" />
+                    <span className="w-4 h-4 rounded-full border-2 border-gray-300 shrink-0" />
                   )}
                   <input
                     type="text"
@@ -597,13 +597,13 @@ export function PresetCreator() {
                       updateFixedQuestionOption(qIndex, oIndex, e.target.value)
                     }
                     placeholder={`選択肢 ${oIndex + 1}`}
-                    className="flex-1 px-2 py-1.5 text-sm border-b border focus:border-blue-400 focus:outline-none bg-transparent"
+                    className="flex-1 px-2 py-1.5 text-sm border-b border-gray-100 focus:border-blue-400 focus:outline-none bg-transparent"
                   />
                   {q.options.length > 2 && (
                     <button
                       type="button"
                       onClick={() => removeFixedQuestionOption(qIndex, oIndex)}
-                      className="text-muted-foreground hover:text-red-500 transition-colors"
+                      className="text-gray-300 hover:text-red-500 transition-colors"
                     >
                       <svg
                         className="w-4 h-4"
@@ -626,9 +626,9 @@ export function PresetCreator() {
                 <button
                   type="button"
                   onClick={() => addFixedQuestionOption(qIndex)}
-                  className="flex items-center gap-2 text-xs text-muted-foreground hover:text-muted-foreground transition-colors py-1"
+                  className="flex items-center gap-2 text-xs text-gray-400 hover:text-gray-600 transition-colors py-1"
                 >
-                  <span className={`w-4 h-4 border-2 border-dashed border-input shrink-0 ${qType === 'checkbox' ? 'rounded' : 'rounded-full'}`} />
+                  <span className={`w-4 h-4 border-2 border-dashed border-gray-300 shrink-0 ${qType === 'checkbox' ? 'rounded' : 'rounded-full'}`} />
                   選択肢を追加
                 </button>
               )}
@@ -672,7 +672,7 @@ export function PresetCreator() {
         <div>
           <label
             htmlFor="purpose"
-            className="block text-sm font-medium text-foreground mb-1"
+            className="block text-sm font-medium text-gray-900 mb-1"
           >
             深掘りの目的 <span className="text-red-500">*</span>
           </label>
@@ -684,7 +684,7 @@ export function PresetCreator() {
             value={purpose}
             onChange={(e) => setPurpose(e.target.value)}
             placeholder="例：新しく開発中のサービスのコンセプトに対する率直な意見を聞きたい。特に、ターゲットユーザーの課題解決に本当に役立つかを確認したい。"
-            className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none bg-card"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none bg-white"
             rows={3}
             required
           />
@@ -692,9 +692,9 @@ export function PresetCreator() {
 
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className="block text-sm font-medium text-foreground">
+            <label className="block text-sm font-medium text-gray-900">
               探索テーマ{" "}
-              <span className="text-xs font-normal text-muted-foreground">任意</span>
+              <span className="text-xs font-normal text-gray-500">任意</span>
             </label>
             <button
               type="button"
@@ -753,7 +753,7 @@ export function PresetCreator() {
                   }`}
                 >
                   <div
-                    className="mt-2 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-muted-foreground transition-colors flex-shrink-0"
+                    className="mt-2 cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500 transition-colors flex-shrink-0"
                     title="ドラッグで並び替え"
                   >
                     <svg
@@ -769,13 +769,13 @@ export function PresetCreator() {
                       <circle cx="15" cy="18" r="1.5" />
                     </svg>
                   </div>
-                  <span className="text-xs text-muted-foreground mt-3 min-w-[1.25rem] text-right">
+                  <span className="text-xs text-gray-500 mt-3 min-w-[1.25rem] text-right">
                     {index + 1}.
                   </span>
                   <textarea
                     value={question}
                     onChange={(e) => updateKeyQuestion(index, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm bg-card"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm bg-white"
                     rows={3}
                     style={
                       { fieldSizing: "content" } as React.CSSProperties
@@ -785,7 +785,7 @@ export function PresetCreator() {
                   <button
                     type="button"
                     onClick={() => removeKeyQuestion(index)}
-                    className="mt-2 text-muted-foreground hover:text-red-500 transition-colors flex-shrink-0"
+                    className="mt-2 text-gray-300 hover:text-red-500 transition-colors flex-shrink-0"
                     title="削除"
                   >
                     <svg
@@ -810,7 +810,7 @@ export function PresetCreator() {
           <button
             type="button"
             onClick={addKeyQuestion}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
           >
             + テーマを追加
           </button>
@@ -822,7 +822,7 @@ export function PresetCreator() {
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
         >
           <svg
             className={`w-4 h-4 transition-transform ${showAdvanced ? "rotate-90" : ""}`}
@@ -842,8 +842,8 @@ export function PresetCreator() {
       </div>
 
       {showAdvanced && (
-        <fieldset className="space-y-5 rounded-xl border bg-muted/50 p-5">
-          <legend className="flex items-center gap-2 px-2 text-sm font-semibold text-muted-foreground">
+        <fieldset className="space-y-5 rounded-xl border border-gray-200 bg-gray-50/50 p-5">
+          <legend className="flex items-center gap-2 px-2 text-sm font-semibold text-gray-600">
             <svg
               className="w-4 h-4"
               fill="none"
@@ -869,12 +869,12 @@ export function PresetCreator() {
           <div>
             <label
               htmlFor="reportInstructions"
-              className="block text-sm font-medium text-foreground mb-1"
+              className="block text-sm font-medium text-gray-900 mb-1"
             >
               レポートのカスタマイズ{" "}
-              <span className="text-xs font-normal text-muted-foreground">任意</span>
+              <span className="text-xs font-normal text-gray-500">任意</span>
             </label>
-            <p className="text-xs text-muted-foreground mb-2">
+            <p className="text-xs text-gray-500 mb-2">
               回答完了後にAIが自動生成するレポートへの追加指示です。
             </p>
             <textarea
@@ -882,7 +882,7 @@ export function PresetCreator() {
               value={reportInstructions}
               onChange={(e) => setReportInstructions(e.target.value)}
               placeholder="例：賛否が分かれたポイントを重点的にまとめてほしい"
-              className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-ring resize-none bg-card"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-white"
               rows={3}
             />
           </div>
@@ -890,18 +890,18 @@ export function PresetCreator() {
           <div>
             <label
               htmlFor="reportTarget"
-              className="block text-sm font-medium text-foreground mb-1"
+              className="block text-sm font-medium text-gray-900 mb-1"
             >
               質問数（レポート生成まで）
             </label>
-            <p className="text-xs text-muted-foreground mb-2">
+            <p className="text-xs text-gray-500 mb-2">
               AIが自動生成する質問の数です。この数に達するとレポートが生成されます。
             </p>
             <select
               id="reportTarget"
               value={reportTarget}
               onChange={(e) => setReportTarget(Number(e.target.value))}
-              className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-card"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             >
               {Array.from({ length: 19 }, (_, i) => (i + 1) * 5).map((n) => (
                 <option key={n} value={n}>
@@ -952,13 +952,13 @@ function CopyableUrl({ url }: { url: string }) {
         type="text"
         value={url}
         readOnly
-        className="flex-1 px-3 py-2 border border-input rounded-lg bg-muted text-sm text-foreground/80 font-mono"
+        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700 font-mono"
         onClick={(e) => (e.target as HTMLInputElement).select()}
       />
       <button
         type="button"
         onClick={handleCopy}
-        className="px-3 py-2 bg-muted border border-input rounded-lg text-sm font-medium text-foreground/80 hover:bg-muted transition-colors whitespace-nowrap"
+        className="px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors whitespace-nowrap"
       >
         {copied ? "Copied" : "Copy"}
       </button>

@@ -2,50 +2,14 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Register shadcn CSS variables as Tailwind utilities */
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --radius: 0.5rem;
-}
-
 :root {
   --background: #f9fafb;
   --foreground: #111827;
   --card: #ffffff;
   --card-foreground: #111827;
-  --popover: #ffffff;
-  --popover-foreground: #111827;
-  --primary: #0f172a;
-  --primary-foreground: #f8fafc;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
   --muted: #f3f4f6;
   --muted-foreground: #6b7280;
-  --accent: #f1f5f9;
-  --accent-foreground: #0f172a;
-  --destructive: #ef4444;
-  --destructive-foreground: #f8fafc;
   --border: #e5e7eb;
-  --input: #e2e8f0;
-  --ring: #94a3b8;
 }
 
 .dark {
@@ -53,21 +17,9 @@
   --foreground: #e2e8f0;
   --card: #1e293b;
   --card-foreground: #e2e8f0;
-  --popover: #1e293b;
-  --popover-foreground: #e2e8f0;
-  --primary: #f8fafc;
-  --primary-foreground: #0f172a;
-  --secondary: #1e293b;
-  --secondary-foreground: #f8fafc;
   --muted: #1e293b;
   --muted-foreground: #94a3b8;
-  --accent: #1e293b;
-  --accent-foreground: #f8fafc;
-  --destructive: #7f1d1d;
-  --destructive-foreground: #f8fafc;
   --border: #334155;
-  --input: #334155;
-  --ring: #cbd5e1;
   color-scheme: dark;
 
   /* Invert Tailwind gray scale for automatic dark mode */
@@ -110,102 +62,6 @@
   --color-red-200: #991b1b;
   --color-red-500: #f87171;
   --color-red-700: #fca5a5;
-
-  /* Emerald palette */
-  --color-emerald-50: #022c22;
-  --color-emerald-100: #064e3b;
-  --color-emerald-200: #065f46;
-  --color-emerald-300: #047857;
-  --color-emerald-400: #059669;
-  --color-emerald-500: #10b981;
-  --color-emerald-600: #34d399;
-  --color-emerald-700: #6ee7b7;
-  --color-emerald-800: #a7f3d0;
-  --color-emerald-900: #d1fae5;
-
-  /* Rose palette */
-  --color-rose-50: #4c0519;
-  --color-rose-100: #881337;
-  --color-rose-200: #9f1239;
-  --color-rose-300: #be123c;
-  --color-rose-400: #e11d48;
-  --color-rose-500: #f43f5e;
-  --color-rose-600: #fb7185;
-  --color-rose-700: #fda4af;
-  --color-rose-800: #fecdd3;
-  --color-rose-900: #fff1f2;
-
-  /* Amber palette */
-  --color-amber-50: #451a03;
-  --color-amber-100: #78350f;
-  --color-amber-200: #92400e;
-  --color-amber-300: #b45309;
-  --color-amber-400: #d97706;
-  --color-amber-500: #f59e0b;
-  --color-amber-600: #fbbf24;
-  --color-amber-700: #fcd34d;
-  --color-amber-800: #fde68a;
-  --color-amber-900: #fef3c7;
-
-  /* Teal palette */
-  --color-teal-50: #042f2e;
-  --color-teal-100: #134e4a;
-  --color-teal-200: #115e59;
-  --color-teal-300: #0f766e;
-  --color-teal-400: #0d9488;
-  --color-teal-500: #14b8a6;
-  --color-teal-600: #2dd4bf;
-  --color-teal-700: #5eead4;
-  --color-teal-800: #99f6e4;
-  --color-teal-900: #ccfbf1;
-
-  /* Indigo palette */
-  --color-indigo-50: #1e1b4b;
-  --color-indigo-100: #312e81;
-  --color-indigo-200: #3730a3;
-  --color-indigo-300: #4338ca;
-  --color-indigo-400: #4f46e5;
-  --color-indigo-500: #6366f1;
-  --color-indigo-600: #818cf8;
-  --color-indigo-700: #a5b4fc;
-  --color-indigo-800: #c7d2fe;
-  --color-indigo-900: #e0e7ff;
-
-  /* Slate palette (for components using slate-* directly) */
-  --color-slate-50: #0f172a;
-  --color-slate-100: #1e293b;
-  --color-slate-200: #334155;
-  --color-slate-300: #475569;
-  --color-slate-400: #64748b;
-  --color-slate-500: #94a3b8;
-  --color-slate-600: #cbd5e1;
-  --color-slate-700: #e2e8f0;
-  --color-slate-800: #f1f5f9;
-  --color-slate-900: #f8fafc;
-
-  /* Violet palette */
-  --color-violet-50: #2e1065;
-  --color-violet-100: #4c1d95;
-  --color-violet-200: #5b21b6;
-  --color-violet-300: #6d28d9;
-  --color-violet-400: #7c3aed;
-  --color-violet-500: #8b5cf6;
-  --color-violet-600: #a78bfa;
-  --color-violet-700: #c4b5fd;
-  --color-violet-800: #ddd6fe;
-  --color-violet-900: #ede9fe;
-
-  /* Yellow palette */
-  --color-yellow-50: #422006;
-  --color-yellow-100: #713f12;
-  --color-yellow-200: #854d0e;
-  --color-yellow-300: #a16207;
-  --color-yellow-400: #ca8a04;
-  --color-yellow-500: #eab308;
-  --color-yellow-600: #facc15;
-  --color-yellow-700: #fde047;
-  --color-yellow-800: #fef08a;
-  --color-yellow-900: #fefce8;
 }
 
 body {
@@ -323,31 +179,6 @@ html {
   .prose li {
     margin-bottom: 0.5rem;
     font-size: 1rem;
-  }
-}
-
-/* ─── LP: Scroll reveal animations ─── */
-@keyframes lp-fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(32px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes lp-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
   }
 }
 

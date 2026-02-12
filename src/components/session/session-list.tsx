@@ -29,7 +29,7 @@ export function SessionList() {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-foreground mb-4">
+      <h2 className="text-lg font-semibold text-gray-900 mb-4">
         過去のセッション
       </h2>
       <div className="space-y-3">
@@ -37,12 +37,12 @@ export function SessionList() {
           <Link
             key={session.id}
             href={`/session/${session.id}`}
-            className="block p-4 bg-card rounded-lg border hover:border-blue-300 hover:shadow-sm transition-all"
+            className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all"
           >
-            <p className="text-foreground font-medium line-clamp-2">
+            <p className="text-gray-900 font-medium line-clamp-2">
               {session.purpose}
             </p>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-gray-500 mt-1">
               {new Date(session.createdAt).toLocaleDateString("ja-JP", {
                 year: "numeric",
                 month: "long",

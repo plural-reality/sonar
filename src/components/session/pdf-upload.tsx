@@ -39,12 +39,12 @@ export function PdfUpload({ onExtract }: PdfUploadProps) {
 
   return (
     <div>
-      <label className="block text-sm font-medium text-foreground/80 mb-2">
+      <label className="block text-sm font-medium text-gray-700 mb-2">
         参考資料（PDF）
       </label>
       <div
         onClick={() => fileInputRef.current?.click()}
-        className="border-2 border-dashed border-border rounded-lg p-4 sm:p-6 text-center cursor-pointer hover:border-border/80 transition-colors"
+        className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 text-center cursor-pointer hover:border-gray-400 transition-colors"
       >
         <input
           ref={fileInputRef}
@@ -54,7 +54,7 @@ export function PdfUpload({ onExtract }: PdfUploadProps) {
           className="hidden"
         />
         {isExtracting ? (
-          <div className="text-muted-foreground">
+          <div className="text-gray-500">
             <svg
               className="animate-spin h-8 w-8 mx-auto mb-2"
               viewBox="0 0 24 24"
@@ -92,12 +92,12 @@ export function PdfUpload({ onExtract }: PdfUploadProps) {
               />
             </svg>
             <p>{fileName}</p>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-gray-500 mt-1">
               クリックして別のファイルを選択
             </p>
           </div>
         ) : (
-          <div className="text-muted-foreground">
+          <div className="text-gray-500">
             <svg
               className="w-8 h-8 mx-auto mb-2"
               fill="none"

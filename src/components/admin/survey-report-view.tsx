@@ -140,7 +140,7 @@ export function SurveyReportView({
   };
 
   return (
-    <div className="prose prose-blue max-w-none prose-headings:text-foreground prose-p:text-foreground/80 prose-li:text-foreground/80">
+    <div className="prose prose-blue max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700">
       <ReactMarkdown
         components={{
           p: ({ node, children, ...props }) => (
