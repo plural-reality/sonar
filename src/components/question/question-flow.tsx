@@ -100,9 +100,16 @@ export function QuestionFlow({
     [submitAnswer]
   );
 
+  // Track whether user chose to continue beyond the target
+  const [continuedBeyondTarget, setContinuedBeyondTarget] = useState(false);
+
   // Auto-generate next batch and analysis when batch is complete
   useEffect(() => {
     const batchComplete = answeredCount > 0 && answeredCount % BATCH_SIZE === 0;
+
+    // Stop auto-generating after reaching the target — user must opt in
+    const reachedTarget = answeredCount >= reportTarget;
+    if (reachedTarget && !continuedBeyondTarget) return;
 
     if (
       batchComplete &&
@@ -125,14 +132,20 @@ export function QuestionFlow({
 
       if (!analysisExists || needsNextBatch) {
         setProcessingBatch(true);
-        const tasks: Promise<unknown>[] = [];
+
+        // Fire analysis in background — don't block question generation
         if (!analysisExists) {
-          tasks.push(generateAnalysis(batchIndex, startIndex, endIndex));
+          generateAnalysis(batchIndex, startIndex, endIndex);
         }
+
+        // Question generation controls processingBatch state
         if (needsNextBatch) {
-          tasks.push(generateNextBatch(nextStartIndex, nextEndIndex));
+          generateNextBatch(nextStartIndex, nextEndIndex).finally(() =>
+            setProcessingBatch(false)
+          );
+        } else {
+          setProcessingBatch(false);
         }
-        Promise.all(tasks).finally(() => setProcessingBatch(false));
       }
     }
   }, [
@@ -364,14 +377,10 @@ export function QuestionFlow({
                 className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-6 text-center"
               >
                 <div className="text-2xl font-bold text-blue-800 mb-2">
-                  🎉 {reportTarget}問の回答が完了しました！
+                  {reportTarget}問の回答が完了しました
                 </div>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 mb-5">
                   十分なデータが集まりました。結果を確認できます。
-                  <br />
-                  <span className="text-sm text-gray-500">
-                    （続けて回答することもできます）
-                  </span>
                 </p>
                 {isFinishing ? (
                   <div className="inline-flex items-center gap-2 px-8 py-3 bg-blue-100 text-blue-700 text-lg font-semibold rounded-lg">
@@ -382,13 +391,31 @@ export function QuestionFlow({
                     結果を分析中...
                   </div>
                 ) : (
-                  <button
-                    onClick={handleFinish}
-                    disabled={isGeneratingReport}
-                    className="px-8 py-3 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 shadow-lg hover:shadow-xl"
-                  >
-                    回答を終えて結果を見る →
-                  </button>
+                  <div className="space-y-3">
+                    <button
+                      onClick={handleFinish}
+                      disabled={isGeneratingReport}
+                      className="w-full sm:w-auto px-8 py-3 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 shadow-lg hover:shadow-xl"
+                    >
+                      回答を終えて結果を見る
+                    </button>
+                    {!continuedBeyondTarget && (
+                      <div>
+                        <button
+                          onClick={() => {
+                            setContinuedBeyondTarget(true);
+                            // Trigger next batch generation
+                            const nextStart = answeredCount + 1;
+                            const nextEnd = answeredCount + BATCH_SIZE;
+                            generateNextBatch(nextStart, nextEnd);
+                          }}
+                          className="text-sm text-gray-500 hover:text-blue-600 transition-colors underline underline-offset-2"
+                        >
+                          もっと深掘りする（さらに5問追加）
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             );
