@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] overflow-x-hidden">
+    <div className="light min-h-screen overflow-x-hidden" style={{ colorScheme: "light" }}>
       <LPHeader />
       <HeroSection />
       <PainPointsSection />
