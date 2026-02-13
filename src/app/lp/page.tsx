@@ -1318,50 +1318,78 @@ function FinalCTA() {
 }
 
 /* ─────────────────────────── Footer ─────────────────────────── */
+const footerProductLinks = [
+  {
+    href: "https://baisoku-kaigi.plural-reality.com",
+    label: "倍速会議（社内会議向け）",
+    external: true,
+  },
+  {
+    href: "https://baisoku-kaigi.plural-reality.com/hearing",
+    label: "倍速商談（営業ヒアリング）",
+    external: true,
+  },
+  {
+    href: "https://baisoku-kaigi.plural-reality.com/gov",
+    label: "千人会議（住民会議・住民アンケート）",
+    external: true,
+  },
+  { href: "/lp", label: "倍速アンケート（AIアンケート）", active: true },
+];
+
+function ExternalLinkIcon() {
+  return (
+    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
+    </svg>
+  );
+}
+
 function LPFooter() {
   return (
-    <footer className="border-t border-[var(--border)] bg-[var(--background)]">
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid md:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="md:col-span-2">
-            <span
-              className="inline-block font-black italic tracking-tighter text-xl leading-none mb-3"
-              style={{ transform: "skewX(-6deg)" }}
-            >
-              倍速アンケート
-            </span>
-            <p className="text-sm text-[var(--muted-foreground)] leading-relaxed max-w-sm">
-              AIを活用した次世代アンケートプラットフォーム。インタビューの深さとアンケートの手軽さを両立し、意見収集を革新します。
-            </p>
-          </div>
+    <footer className="border-t border-slate-200 bg-white">
+      <div className="mx-auto flex w-full flex-col gap-4 px-4 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+        <a
+          href="https://www.plural-reality.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm font-medium text-slate-600 hover:text-slate-900 underline decoration-slate-400 hover:decoration-slate-900 transition-colors inline-flex items-center gap-1.5"
+        >
+          合同会社 多元現実
+          <ExternalLinkIcon />
+        </a>
 
-          {/* Links */}
-          <div>
-            <h4 className="font-semibold text-sm mb-3">プロダクト</h4>
-            <ul className="space-y-2 text-sm text-[var(--muted-foreground)]">
-              <li><a href="#features" className="hover:text-[var(--foreground)] transition-colors">機能</a></li>
-              <li><a href="#comparison" className="hover:text-[var(--foreground)] transition-colors">比較</a></li>
-              <li><a href="#usecases" className="hover:text-[var(--foreground)] transition-colors">活用例</a></li>
-              <li><a href="#pricing" className="hover:text-[var(--foreground)] transition-colors">料金</a></li>
-              <li><a href="#faq" className="hover:text-[var(--foreground)] transition-colors">FAQ</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-sm mb-3">はじめる</h4>
-            <ul className="space-y-2 text-sm text-[var(--muted-foreground)]">
-              <li><Link href="/create" className="hover:text-[var(--foreground)] transition-colors">アンケート作成</Link></li>
-              <li><Link href="/login" className="hover:text-[var(--foreground)] transition-colors">ログイン</Link></li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-10 pt-6 border-t border-[var(--border)] flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-[var(--muted-foreground)]">
-            &copy; {new Date().getFullYear()} 倍速アンケート by Plural Reality
-          </p>
-        </div>
+        <nav className="flex flex-wrap items-center gap-2">
+          {footerProductLinks.map((link) => (
+            <div key={link.href}>
+              {"active" in link && link.active ? (
+                <span className="inline-flex items-center gap-2 rounded-md bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-900 cursor-default">
+                  {link.label}
+                  <span className="rounded bg-slate-900 px-1.5 py-0.5 text-xs text-white">
+                    閲覧中
+                  </span>
+                </span>
+              ) : "external" in link && link.external ? (
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                >
+                  {link.label}
+                  <ExternalLinkIcon />
+                </a>
+              ) : (
+                <Link
+                  href={link.href}
+                  className="inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                >
+                  {link.label}
+                </Link>
+              )}
+            </div>
+          ))}
+        </nav>
       </div>
     </footer>
   );
