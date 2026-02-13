@@ -36,7 +36,6 @@ export async function middleware(request: NextRequest) {
   // Protected routes: require login
   const { pathname } = request.nextUrl;
   const isProtected =
-    pathname === "/" ||
     pathname === "/create" ||
     pathname.startsWith("/manage");
 
@@ -50,7 +49,7 @@ export async function middleware(request: NextRequest) {
   // Already logged in — skip login page
   if (pathname === "/login" && user) {
     const homeUrl = request.nextUrl.clone();
-    homeUrl.pathname = "/";
+    homeUrl.pathname = "/lp";
     homeUrl.search = "";
     return NextResponse.redirect(homeUrl);
   }
